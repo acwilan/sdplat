@@ -3,6 +3,7 @@ import { Navbar, Container } from 'react-bootstrap';
 import Navigation from './components/Navigation';
 import Sidebar from './components/Sidebar';
 import './App.css';
+import FormComponent from './components/FormComponent';
 
 const App: React.FC<{ theme: string }> = ({ theme }) => {
   return (
@@ -17,8 +18,7 @@ const App: React.FC<{ theme: string }> = ({ theme }) => {
         <div className="d-flex">
           <Sidebar />
           <div className="content-container">
-            <h1>Hello, World!</h1>
-            <p>This is the main content area.</p>
+            <FormComponent />
           </div>
         </div>
       </Container>

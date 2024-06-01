@@ -4,6 +4,6 @@ import App from '../src/App';
 
 test('renders welcome message', () => {
   render(<App theme='light' />);
-  const linkElement = screen.getByText(/This is the main content area/i);
+  const linkElement = screen.getByText(/txt2img: Input parameters/i);
   expect(linkElement).toBeInTheDocument();
 });
