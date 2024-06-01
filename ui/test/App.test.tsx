@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import App from '../src/App';
 
 test('renders welcome message', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/welcome to react bootstrap/i);
+  render(<App theme='light' />);
+  const linkElement = screen.getByText(/This is the main content area/i);
   expect(linkElement).toBeInTheDocument();
 });

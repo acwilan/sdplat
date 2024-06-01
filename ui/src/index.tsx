@@ -30,7 +30,7 @@ const Root: React.FC = () => {
 
   return (
     <div className={theme}>
-      <App />
+      <App theme={theme} />
     </div>
   );
 };

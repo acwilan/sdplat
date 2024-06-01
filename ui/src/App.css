@@ -1,0 +1,29 @@
+:root {
+    --sidebar-bg: #f8f9fa;
+    --sidebar-color: #000;
+    --sidebar-link-color: #000;
+    --sidebar-link-hover-bg: #e9ecef;
+    --sidebar-link-hover-color: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sidebar-bg: #343a40;
+        --sidebar-color: #fff;
+        --sidebar-link-color: #fff;
+        --sidebar-link-hover-bg: #495057;
+        --sidebar-link-hover-color: #fff;
+    }
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-container {
+    flex: 1;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}

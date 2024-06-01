@@ -1,22 +1,26 @@
 import React from 'react';
-import { Button, Navbar, Nav, Container } from 'react-bootstrap';
+import { Navbar, Container } from 'react-bootstrap';
+import Navigation from './components/Navigation';
+import Sidebar from './components/Sidebar';
+import './App.css';
 
-const App: React.FC = () => {
+const App: React.FC<{ theme: string }> = ({ theme }) => {
   return (
     <div>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg={theme} variant={theme}>
         <Container>
           <Navbar.Brand href="#home">React Bootstrap</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-          </Nav>
+          <Navigation />
         </Container>
       </Navbar>
-      <Container className="mt-3">
-        <h1>Welcome to React Bootstrap</h1>
-        <Button variant="primary">Hello, React Bootstrap!</Button>
+      <Container fluid className="app-container">
+        <div className="d-flex">
+          <Sidebar />
+          <div className="content-container">
+            <h1>Hello, World!</h1>
+            <p>This is the main content area.</p>
+          </div>
+        </div>
       </Container>
     </div>
   );
