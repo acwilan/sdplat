@@ -30,6 +30,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "devDependencies": {
+    "@codecov/webpack-plugin": "^0.0.1-beta.8",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.12",
