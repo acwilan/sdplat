@@ -39,7 +39,7 @@ const FormComponent: React.FC = () => {
 
   return (
     <>
-      <h2>txt2img: Input parameters</h2>
+      <h2>Text to image</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group as={Row} controlId="formPrompt">
           <Form.Label column sm={2}>Prompt:</Form.Label>
@@ -77,8 +77,8 @@ const FormComponent: React.FC = () => {
         </Form.Group>
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
-            <Button type="submit">Submit</Button>
-            <Button type="button" onClick={handleClear}>Clear</Button>
+            <Button type="submit" variant='primary'>Submit</Button>
+            <Button type="button" variant='link' onClick={handleClear}>Clear</Button>
           </Col>
         </Form.Group>
       </Form>
