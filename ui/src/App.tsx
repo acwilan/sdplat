@@ -1,22 +1,38 @@
 import React from 'react';
-import { Button, Navbar, Nav, Container } from 'react-bootstrap';
+import { Link, Routes, Route } from 'react-router-dom';
+import { Navbar, Container } from 'react-bootstrap';
+import Navigation from './components/Navigation';
+import Sidebar from './components/Sidebar';
+import './App.css';
+import FormComponent from './components/FormComponent';
+import Home from './components/Home';
 
-const App: React.FC = () => {
+const Txt2Img = () => <FormComponent />;
+const Img2Img = () => <h2>Image to Image (Img2Img)</h2>;
+const Txt2Vid = () => <h2>Text to Video (Txt2Vid)</h2>;
+
+const App: React.FC<{ theme: string }> = ({ theme }) => {
   return (
     <div>
-      <Navbar bg="dark" variant="dark">
+      <Navbar bg={theme} variant={theme} expand="lg">
         <Container>
-          <Navbar.Brand href="#home">React Bootstrap</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-          </Nav>
+          <Navbar.Brand as={Link} to="/">SD Plat</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navigation />
         </Container>
       </Navbar>
-      <Container className="mt-3">
-        <h1>Welcome to React Bootstrap</h1>
-        <Button variant="primary">Hello, React Bootstrap!</Button>
+      <Container fluid className="app-container">
+        <div className="d-flex">
+          <Sidebar />
+          <div className="content-container">
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/txt2img' element={<Txt2Img />} />
+              <Route path="/img2img" element={<Img2Img />} />
+              <Route path="/txt2vid" element={<Txt2Vid />} />
+            </Routes>
+          </div>
+        </div>
       </Container>
     </div>
   );

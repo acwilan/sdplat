@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/darkly/bootstrap.min.css'; // Dark theme
@@ -29,9 +30,11 @@ const Root: React.FC = () => {
   }, [theme]);  
 
   return (
-    <div className={theme}>
-      <App />
-    </div>
+    <BrowserRouter>
+      <div className={theme}>
+        <App theme={theme} />
+      </div>
+    </BrowserRouter>
   );
 };
 
