@@ -8,13 +8,13 @@ describe('FormComponent', () => {
     const { getByLabelText } = render(<FormComponent />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
-    fireEvent.change(getByLabelText('Model:'), { target: { value: 'model2' } });
+    fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
     fireEvent.change(getByLabelText('Height:'), { target: { value: '100' } });
     fireEvent.change(getByLabelText('Width:'), { target: { value: '200' } });
     fireEvent.change(getByLabelText('Negative Prompt:'), { target: { value: 'Test Negative Prompt' } });
 
     expect(getByLabelText('Prompt:')).toHaveValue('Test Prompt');
-    expect(getByLabelText('Model:')).toHaveValue('model2');
+    expect(getByLabelText('Model:')).toHaveValue('2');
     expect(getByLabelText('Height:')).toHaveValue(100);
     expect(getByLabelText('Width:')).toHaveValue(200);
     expect(getByLabelText('Negative Prompt:')).toHaveValue('Test Negative Prompt');
@@ -24,7 +24,7 @@ describe('FormComponent', () => {
     const { getByText, getByLabelText } = render(<FormComponent />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
-    fireEvent.change(getByLabelText('Model:'), { target: { value: 'model2' } });
+    fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
     fireEvent.change(getByLabelText('Height:'), { target: { value: '100' } });
     fireEvent.change(getByLabelText('Width:'), { target: { value: '200' } });
     fireEvent.change(getByLabelText('Negative Prompt:'), { target: { value: 'Test Negative Prompt' } });
@@ -32,17 +32,17 @@ describe('FormComponent', () => {
     fireEvent.click(getByText('Clear'));
 
     expect(getByLabelText('Prompt:')).toHaveValue('');
-    expect(getByLabelText('Model:')).toHaveValue('model1'); // Expect the dropdown to reset to its initial state
-    expect(getByLabelText('Height:')).toHaveValue(0);
-    expect(getByLabelText('Width:')).toHaveValue(0);
+    expect(getByLabelText('Model:')).toHaveValue('');
+    expect(getByLabelText('Height:')).toHaveValue(null);
+    expect(getByLabelText('Width:')).toHaveValue(null);
     expect(getByLabelText('Negative Prompt:')).toHaveValue('');
   });
 
   test('should persist form data to local storage when Submit button is clicked', () => {
-    const { getByText, getByLabelText } = render(<FormComponent />);
+    const { getByText, getByLabelText } = render(<FormComponent submitHandler={() => {}} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
-    fireEvent.change(getByLabelText('Model:'), { target: { value: 'model2' } });
+    fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
     fireEvent.change(getByLabelText('Height:'), { target: { value: '100' } });
     fireEvent.change(getByLabelText('Width:'), { target: { value: '200' } });
     fireEvent.change(getByLabelText('Negative Prompt:'), { target: { value: 'Test Negative Prompt' } });
@@ -53,12 +53,10 @@ describe('FormComponent', () => {
 
     expect(formData).toEqual({
       prompt: 'Test Prompt',
-      model: 'model2',
+      model: '2',
       height: '100',
       width: '200',
       negativePrompt: 'Test Negative Prompt',
     });
   });
-
-  // Add more tests as needed
 });
