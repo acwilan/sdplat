@@ -1,19 +1,47 @@
 // src/components/FormComponent.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { config } from '../../../conf/sdConfig';
 
-const FormComponent: React.FC = () => {
-  const [formData, setFormData] = useState({
-    prompt: '',
-    model: '',
-    height: 0,
-    width: 0,
-    negativePrompt: '',
-  });
+type ModelInfo = {
+  id: string;
+  name: string;
+  description?: string;
+  beamId?: string;
+  baseModel?: string;
+};
+
+export type FormData = {
+  prompt: string;
+  model: string;
+  height: string;
+  width: string;
+  negativePrompt: string;
+}
+
+const emptyForm: FormData = {
+  prompt: '',
+  model: '',
+  height: '',
+  width: '',
+  negativePrompt: ''
+}
+const sortedModels: ModelInfo[] = config.models.sort((a: ModelInfo, b: ModelInfo) => a.name.localeCompare(b.name));
+const storedFormDataStr: string = localStorage.getItem("formData") || JSON.stringify(emptyForm);
+const initialFormData: FormData = JSON.parse(storedFormDataStr);
+
+interface FormComponentProps {
+  submitHandler?: (formData: FormData) => void;
+}
+
+const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
+  const [formData, setFormData] = useState<FormData>(initialFormData);
+
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData((prevData: FormData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -21,21 +49,26 @@ const FormComponent: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Persist formData to local storage
     localStorage.setItem('formData', JSON.stringify(formData));
+    if (submitHandler) {
+      submitHandler(formData);
+    }
   };
 
   const handleClear = () => {
-    setFormData({
-      prompt: '',
-      model: '',
-      height: 0,
-      width: 0,
-      negativePrompt: '',
-    });
+    setFormData(emptyForm);
     // Clear persisted formData from local storage
     localStorage.removeItem('formData');
   };
+
+  useEffect(() => {
+    const isValid = formData !== undefined && (
+        (formData.prompt !== undefined && formData.prompt.trim() !== '') && 
+        (formData.model !== undefined && formData.model.trim() !== '')
+    );
+    setIsFormValid(isValid);
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }, [formData]);
 
   return (
     <>
@@ -51,9 +84,12 @@ const FormComponent: React.FC = () => {
           <Form.Label column sm={2}>Model:</Form.Label>
           <Col sm={10}>
             <Form.Control as="select" name="model" value={formData.model} onChange={handleChange}>
-              <option value="model1">Model 1</option>
-              <option value="model2">Model 2</option>
-              <option value="model3">Model 3</option>
+              <option value="">Choose a model</option>
+              {sortedModels.map((model: any) => (
+                <option key={model.id} value={model.id}>
+                  {model.name}
+                </option>
+              ))}
             </Form.Control>
           </Col>
         </Form.Group>
@@ -77,7 +113,7 @@ const FormComponent: React.FC = () => {
         </Form.Group>
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
-            <Button type="submit" variant='primary'>Submit</Button>
+            <Button type="submit" variant='primary' disabled={!isFormValid}>Submit</Button>
             <Button type="button" variant='link' onClick={handleClear}>Clear</Button>
           </Col>
         </Form.Group>
