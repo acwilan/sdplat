@@ -22,6 +22,9 @@ jobs:
       with:
         node-version: '18'
 
+    - name: Create sample config file
+      run: cp conf/sdConfig.sample.ts conf/sdConfig.ts
+
     - name: Install dependencies
       run: yarn install
       working-directory: ./ui
