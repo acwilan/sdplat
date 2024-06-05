@@ -4,10 +4,9 @@ import { Navbar, Container } from 'react-bootstrap';
 import Navigation from './components/Navigation';
 import Sidebar from './components/Sidebar';
 import './App.css';
-import FormComponent from './components/FormComponent';
 import Home from './components/Home';
+import Txt2Img from './components/Txt2Img';
 
-const Txt2Img = () => <FormComponent submitHandler={(formData) => console.log(`formData: ${JSON.stringify(formData)}`)} />;
 const Img2Img = () => <h2>Image to Image (Img2Img)</h2>;
 const Txt2Vid = () => <h2>Text to Video (Txt2Vid)</h2>;
 

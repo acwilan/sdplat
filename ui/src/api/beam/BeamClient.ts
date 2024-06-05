@@ -9,9 +9,9 @@ export class BeamClient {
     private authToken: string;
     private pollInterval: number;
 
-    public constructor(params: { authToken: string, pollInterval: number }) {
+    public constructor(params: { authToken: string, pollInterval?: number }) {
         this.authToken = params.authToken;
-        this.pollInterval = params.pollInterval;
+        this.pollInterval = params.pollInterval || 3000;
     }
 
     public async txt2img(appId: string, params: Txt2ImgRequest): Promise<string> {
@@ -34,8 +34,8 @@ export class BeamClient {
         }).then(data => data.task_id);
     }
 
-    public async pollTaskStatus(taskId: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
+    public async pollTaskStatus(taskId: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
             const statusUrl = `https://api.beam.cloud/v1/task/${taskId}/status/`;
             const poll = setInterval(() => {
                 fetch(statusUrl, {
