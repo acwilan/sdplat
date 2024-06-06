@@ -4,10 +4,11 @@
   "description": "Stable Diffusion Platform",
   "main": "index.js",
   "scripts": {
-    "start": "cd ui && npx webpack serve --mode development",
-    "build": "cd ui && npx webpack --mode production",
-    "test": "cd ui && npx jest",
-    "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh"
+    "start": "cd ui && webpack serve --mode development",
+    "build": "cd ui && webpack --mode production",
+    "test": "cd ui && jest",
+    "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh",
+    "heroku-postinstall": "cd ui && yarn install"
   },
   "repository": {
     "type": "git",
