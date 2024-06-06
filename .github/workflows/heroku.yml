@@ -22,7 +22,7 @@ jobs:
       - name: Generate Config File
         env:
           BEAM_AUTH_TOKEN: ${{ secrets.BEAM_AUTH_TOKEN }}
-        run: ./generateConfigFile.sh
+        run: ./.github/workflows/scripts/generateConfigFile.sh
       - name: Install dependencies
         working-directory: ./ui
         run: yarn install
