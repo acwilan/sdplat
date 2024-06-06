@@ -6,7 +6,12 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
+    "heroku-prebuild": "../.github/workflows/scripts/generateConfigFile.sh",
     "test": "jest"
+  },
+  "engines": {
+    "node": "18.x",
+    "yarn": "1.22.22"
   },
   "dependencies": {
     "@babel/core": "^7.24.6",

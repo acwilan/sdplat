@@ -1,0 +1,22 @@
+{
+  "name": "sdplat",
+  "version": "1.0.0",
+  "description": "Stable Diffusion Platform",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd ui && webpack serve --mode development",
+    "build": "cd ui && webpack --mode production",
+    "test": "cd ui && jest",
+    "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acwilan/sdplat.git"
+  },
+  "author": "Andres Rovira <andres.rovira@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/acwilan/sdplat/issues"
+  },
+  "homepage": "https://github.com/acwilan/sdplat#readme"
+}
