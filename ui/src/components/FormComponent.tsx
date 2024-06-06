@@ -1,9 +1,8 @@
 // src/components/FormComponent.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { config } from '../../../conf/sdConfig';
 
-type ModelInfo = {
+export type ModelInfo = {
   id: string;
   name: string;
   description?: string;
@@ -26,18 +25,20 @@ const emptyForm: FormData = {
   width: '',
   negativePrompt: ''
 }
-const sortedModels: ModelInfo[] = config.models.sort((a: ModelInfo, b: ModelInfo) => a.name.localeCompare(b.name));
 const storedFormDataStr: string = localStorage.getItem("formData") || JSON.stringify(emptyForm);
 const initialFormData: FormData = JSON.parse(storedFormDataStr);
 
-interface FormComponentProps {
-  submitHandler?: (formData: FormData) => void;
+export interface FormComponentProps {
+  submitHandler?: (formData: FormData) => Promise<void>;
+  clearHandler?: () => void;
+  requestCompleted?: () => void;
+  models: ModelInfo[];
 }
 
-const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
+export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, models, clearHandler, requestCompleted }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
-
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isFormBlocked, setIsFormBlocked] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -51,7 +52,10 @@ const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
     e.preventDefault();
     localStorage.setItem('formData', JSON.stringify(formData));
     if (submitHandler) {
-      submitHandler(formData);
+      setIsFormBlocked(true);
+      submitHandler(formData).finally(() => {
+        setIsFormBlocked(false);
+      });
     }
   };
 
@@ -59,12 +63,15 @@ const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
     setFormData(emptyForm);
     // Clear persisted formData from local storage
     localStorage.removeItem('formData');
+    if (clearHandler) {
+      clearHandler();
+    }
   };
 
   useEffect(() => {
     const isValid = formData !== undefined && (
-        (formData.prompt !== undefined && formData.prompt.trim() !== '') && 
-        (formData.model !== undefined && formData.model.trim() !== '')
+      (formData.prompt !== undefined && formData.prompt.trim() !== '') &&
+      (formData.model !== undefined && formData.model.trim() !== '')
     );
     setIsFormValid(isValid);
     localStorage.setItem('formData', JSON.stringify(formData));
@@ -77,15 +84,15 @@ const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
         <Form.Group as={Row} controlId="formPrompt">
           <Form.Label column sm={2}>Prompt:</Form.Label>
           <Col sm={10}>
-            <Form.Control as="textarea" rows={3} name="prompt" value={formData.prompt} onChange={handleChange} />
+            <Form.Control as="textarea" rows={3} name="prompt" value={formData.prompt} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="formModel">
           <Form.Label column sm={2}>Model:</Form.Label>
           <Col sm={10}>
-            <Form.Control as="select" name="model" value={formData.model} onChange={handleChange}>
+            <Form.Control as="select" name="model" value={formData.model} onChange={handleChange} disabled={isFormBlocked}>
               <option value="">Choose a model</option>
-              {sortedModels.map((model: any) => (
+              {models.map((model: any) => (
                 <option key={model.id} value={model.id}>
                   {model.name}
                 </option>
@@ -96,30 +103,28 @@ const FormComponent: React.FC<FormComponentProps> = ({ submitHandler }) => {
         <Form.Group as={Row} controlId="formHeight">
           <Form.Label column sm={2}>Height:</Form.Label>
           <Col sm={10}>
-            <Form.Control type="number" name="height" value={formData.height} onChange={handleChange} />
+            <Form.Control type="number" name="height" value={formData.height} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="formWidth">
           <Form.Label column sm={2}>Width:</Form.Label>
           <Col sm={10}>
-            <Form.Control type="number" name="width" value={formData.width} onChange={handleChange} />
+            <Form.Control type="number" name="width" value={formData.width} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
         <Form.Group as={Row} controlId="formNegativePrompt">
           <Form.Label column sm={2}>Negative Prompt:</Form.Label>
           <Col sm={10}>
-            <Form.Control as="textarea" rows={3} name="negativePrompt" value={formData.negativePrompt} onChange={handleChange} />
+            <Form.Control as="textarea" rows={3} name="negativePrompt" value={formData.negativePrompt} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
         <Form.Group as={Row}>
           <Col sm={{ span: 10, offset: 2 }}>
-            <Button type="submit" variant='primary' disabled={!isFormValid}>Submit</Button>
-            <Button type="button" variant='link' onClick={handleClear}>Clear</Button>
+            <Button type="submit" variant='primary' disabled={!isFormValid || isFormBlocked}>Submit</Button>
+            <Button type="button" variant='link' onClick={handleClear} disabled={isFormBlocked}>Clear</Button>
           </Col>
         </Form.Group>
       </Form>
     </>
   );
 };
-
-export default FormComponent;

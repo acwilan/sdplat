@@ -4,7 +4,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import Home from '../src/components/Home';
 import App from '../src/App';
-import FormComponent from '../src/components/FormComponent';
+import { FormComponent } from '../src/components/FormComponent';
+import { mockModels } from './mocks/models';
 
 test('renders welcome message', () => {
   render(
@@ -21,7 +22,7 @@ test('navigates to Txt2Img page when the card is clicked', () => {
     <MemoryRouter initialEntries={['/']}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/txt2img" element={<FormComponent />} />
+        <Route path="/txt2img" element={<FormComponent models={mockModels} />} />
       </Routes>
     </MemoryRouter>
   );
