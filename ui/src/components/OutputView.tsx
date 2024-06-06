@@ -17,7 +17,7 @@ const OutputView: React.FC<OutputViewProps> = ({ message, messageType, imageUrl 
   return (
     <div className="d-flex flex-column align-items-center">
       {message && (
-        <Alert variant={messageType} className="w-100" dismissible>
+        <Alert variant={messageType} className="w-100">
           {message}
         </Alert>
       )}

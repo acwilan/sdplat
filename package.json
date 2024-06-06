@@ -1,0 +1,27 @@
+{
+  "name": "sdplat",
+  "version": "1.0.0",
+  "description": "Stable Diffusion Platform",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"Nothing to build\"",
+    "test": "echo \"Nothing to test\""
+  },
+  "engines": {
+    "node": "18.x",
+    "yarn": "1.22.22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acwilan/sdplat.git"
+  },
+  "author": "Andres Rovira <andres.rovira@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/acwilan/sdplat/issues"
+  },
+  "homepage": "https://github.com/acwilan/sdplat#readme",
+  "dependencies": {
+    "serve": "^14.2.3"
+  }
+}
