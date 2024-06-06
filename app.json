@@ -1,0 +1,10 @@
+{
+    "name": "Stable Diffusion Platform",
+    "Description": "Platform to make all kinds of generations using stable diffusion",
+    "repository": "https://github.com/acwilan/sdplat",
+    "buildpacks": [
+        {
+            "url": "https://github.com/negativetwelve/heroku-buildpack-subdir"
+        }
+    ]
+}
