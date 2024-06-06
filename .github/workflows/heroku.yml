@@ -25,9 +25,14 @@ jobs:
       - name: Build
         working-directory: ./ui
         run: yarn build
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "sdplat-feat"
           heroku_email: "andres.rovira@gmail.com"
+          branch: ${{ steps.extract_branch.outputs.branch }}
