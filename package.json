@@ -4,7 +4,12 @@
   "description": "Stable Diffusion Platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"Nothing to build\"",
+    "test": "echo \"Nothing to test\""
+  },
+  "engines": {
+    "node": "18.x",
+    "yarn": "1.22.22"
   },
   "repository": {
     "type": "git",
