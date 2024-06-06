@@ -19,18 +19,18 @@ export class BeamClient {
         const authHeader = `Basic ${this.authToken}`;
         return fetch(
             url, {
-                method: 'POST',
-                headers: {
-                  'Authorization': authHeader,
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(params)
-            }
+            method: 'POST',
+            headers: {
+                'Authorization': authHeader,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        }
         ).then(response => {
-          if (response.status !== 200) {
-            throw new Error(`Invalid response ${response.status}`);
-          }
-          return response.json();
+            if (response.status !== 200) {
+                throw new Error(`Invalid response ${response.status}`);
+            }
+            return response.json();
         }).then(data => data.task_id);
     }
 
@@ -40,23 +40,23 @@ export class BeamClient {
             const poll = setInterval(() => {
                 fetch(statusUrl, {
                     headers: {
-                    'Authorization': `Basic ${this.authToken}`
+                        'Authorization': `Basic ${this.authToken}`
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'COMPLETE') {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'COMPLETE') {
+                            clearInterval(poll);
+                            return resolve(data.outputs['./output.png'].url);
+                        }
+                        if (data.status !== 'PENDING' && data.status !== 'RUNNING') {
+                            reject(data.status);
+                        }
+                    })
+                    .catch(error => {
                         clearInterval(poll);
-                        return resolve(data.outputs['./output.png'].url);
-                    }
-                    if (data.status !== 'PENDING' && data.status !== 'RUNNING') {
-                        reject(data.status);
-                    }
-                })
-                .catch(error => {
-                    clearInterval(poll);
-                    reject(error);
-                });
+                        reject(error);
+                    });
             }, this.pollInterval);
         });
     }

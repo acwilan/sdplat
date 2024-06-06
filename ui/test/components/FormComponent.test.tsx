@@ -1,11 +1,18 @@
 // src/components/FormComponent.test.tsx
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
-import FormComponent from '../../src/components/FormComponent';
+import { render, fireEvent, act } from '@testing-library/react';
+import { FormComponent, FormData, ModelInfo } from '../../src/components/FormComponent';
+import { mockModels } from '../mocks/models';
+
+const promiseHandler: (formData: FormData) => Promise<any> = (formData: FormData) => {
+  return new Promise<any>((resolve, reject) => {
+    resolve(true);
+  });
+};
 
 describe('FormComponent', () => {
   test('should update form data when inputs change', () => {
-    const { getByLabelText } = render(<FormComponent />);
+    const { getByLabelText } = render(<FormComponent models={mockModels} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
@@ -21,7 +28,7 @@ describe('FormComponent', () => {
   });
 
   test('should clear form data when Clear button is clicked', () => {
-    const { getByText, getByLabelText } = render(<FormComponent />);
+    const { getByText, getByLabelText } = render(<FormComponent models={mockModels} clearHandler={() => {}} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
@@ -38,8 +45,8 @@ describe('FormComponent', () => {
     expect(getByLabelText('Negative Prompt:')).toHaveValue('');
   });
 
-  test('should persist form data to local storage when Submit button is clicked', () => {
-    const { getByText, getByLabelText } = render(<FormComponent submitHandler={() => {}} />);
+  test('should persist form data to local storage when Submit button is clicked', async () => {
+    const { getByText, getByLabelText } = render(<FormComponent models={mockModels} submitHandler={promiseHandler} clearHandler={() => console.log('clear')} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
@@ -47,7 +54,7 @@ describe('FormComponent', () => {
     fireEvent.change(getByLabelText('Width:'), { target: { value: '200' } });
     fireEvent.change(getByLabelText('Negative Prompt:'), { target: { value: 'Test Negative Prompt' } });
 
-    fireEvent.click(getByText('Submit'));
+    await act(async () => fireEvent.click(getByText('Submit')));
 
     const formData = JSON.parse(localStorage.getItem('formData') || '{}');
 

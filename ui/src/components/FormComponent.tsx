@@ -28,14 +28,14 @@ const emptyForm: FormData = {
 const storedFormDataStr: string = localStorage.getItem("formData") || JSON.stringify(emptyForm);
 const initialFormData: FormData = JSON.parse(storedFormDataStr);
 
-interface FormComponentProps {
+export interface FormComponentProps {
   submitHandler?: (formData: FormData) => Promise<void>;
   clearHandler?: () => void;
   requestCompleted?: () => void;
-  sortedModels: ModelInfo[];
+  models: ModelInfo[];
 }
 
-export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, sortedModels, clearHandler, requestCompleted }) => {
+export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, models, clearHandler, requestCompleted }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormBlocked, setIsFormBlocked] = useState(false);
@@ -92,7 +92,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, sor
           <Col sm={10}>
             <Form.Control as="select" name="model" value={formData.model} onChange={handleChange} disabled={isFormBlocked}>
               <option value="">Choose a model</option>
-              {sortedModels.map((model: any) => (
+              {models.map((model: any) => (
                 <option key={model.id} value={model.id}>
                   {model.name}
                 </option>

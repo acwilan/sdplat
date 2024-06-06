@@ -44,7 +44,7 @@ const Txt2Img: React.FC = () => {
     
     return (
         <>
-            <FormComponent submitHandler={formSubmitted} clearHandler={formCleared} sortedModels={sortedModels} />
+            <FormComponent submitHandler={formSubmitted} clearHandler={formCleared} models={sortedModels} />
             <OutputView message={outputMessage} messageType={messageType} imageUrl={imgUrl} />
         </>
     );
