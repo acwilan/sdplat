@@ -7,7 +7,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: process.env.NODE_ENV === 'production' ? '/sdplat' : '/',
+    publicPath: process.env.PUBLIC_URL || '/',
   },
   mode: 'development',
   devtool: 'source-map',
