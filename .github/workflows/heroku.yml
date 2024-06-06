@@ -10,29 +10,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.before }}
-      - name: Check if branch is feature
-        id: check_branch
-        run: echo "::set-output name=is_feature::$(echo $GITHUB_REF | grep -c 'refs/heads/feature/')"
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Use Yarn
-        run: npm install -g yarn@latest
-      - name: Generate Config File
-        env:
-          BEAM_AUTH_TOKEN: ${{ secrets.BEAM_AUTH_TOKEN }}
-        run: ./.github/workflows/scripts/generateConfigFile.sh ./conf/sdConfig.ts
-      - name: Install dependencies
-        working-directory: ./ui
-        run: yarn install
-      - name: Build
-        working-directory: ./ui
-        run: yarn build
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
       - name: Deploy to Heroku
-        if: steps.check_branch.outputs.is_feature == '1'
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "sdplat"
           heroku_email: "andres.rovira@gmail.com"
+          branch: ${{ steps.extract_branch.outputs.branch }}
