@@ -19,10 +19,6 @@ jobs:
           node-version: '18'
       - name: Use Yarn
         run: npm install -g yarn@latest
-      - name: Generate Config File
-        env:
-          BEAM_AUTH_TOKEN: ${{ secrets.BEAM_AUTH_TOKEN }}
-        run: ./.github/workflows/scripts/generateConfigFile.sh
       - name: Install dependencies
         working-directory: ./ui
         run: yarn install
