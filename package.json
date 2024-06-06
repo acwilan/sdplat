@@ -7,8 +7,7 @@
     "start": "cd ui && webpack serve --mode development",
     "build": "cd ui && webpack --mode production",
     "test": "cd ui && jest",
-    "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh",
-    "heroku-postinstall": "cd ui && yarn install"
+    "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh && cd ui && yarn install"
   },
   "repository": {
     "type": "git",
