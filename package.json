@@ -4,14 +4,18 @@
   "description": "Stable Diffusion Platform",
   "main": "index.js",
   "scripts": {
-    "start": "cd ui && webpack serve --mode development",
-    "build": "cd ui && webpack --mode production",
-    "test": "cd ui && jest",
+    "start": "cd ui && npx webpack serve --mode development",
+    "build": "cd ui && npx webpack --mode production",
+    "test": "cd ui && npx jest",
     "heroku-prebuild": "./.github/workflows/scripts/generateConfigFile.sh"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/acwilan/sdplat.git"
+  },
+  "engines": {
+    "node": "18.x",
+    "yarn": "1.22.22"
   },
   "author": "Andres Rovira <andres.rovira@gmail.com>",
   "license": "Apache-2.0",
