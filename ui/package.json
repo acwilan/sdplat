@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
-    "heroku-prebuild": "../.github/workflows/scripts/generateConfigFile.sh",
+    "heroku-prebuild": "../.github/workflows/scripts/generateConfigFile.sh ../conf/sdConfig.ts",
     "test": "jest"
   },
   "engines": {
