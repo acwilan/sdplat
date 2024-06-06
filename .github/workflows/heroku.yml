@@ -14,6 +14,11 @@ jobs:
           node-version: '18'
       - name: Use Yarn
         run: npm install -g yarn@latest
+      - name: Generate Config File
+        env:
+          BEAM_AUTH_TOKEN: ${{ secrets.BEAM_AUTH_TOKEN }}
+          BEAM_APP_ID: ${{ secrets.BEAM_APP_ID }}
+        run: ./generateConfigFile.sh
       - name: Install dependencies
         working-directory: ./ui
         run: yarn install
@@ -24,5 +29,5 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: ${{ env.HEROKU_APP_NAME }}
-          heroku_email: ${{ env.HEROKU_EMAIL }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
