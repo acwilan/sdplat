@@ -44,6 +44,7 @@ jobs:
       env:
         BUMP_TYPE: ${{ github.event.inputs.bumpType }}
       run: |
+          echo "Bump type is '$BUMP_TYPE'"
           if [ "$BUMP_TYPE" == "major" ]; then
             yarn --cwd ./ui version --major --no-git-tag-version
             yarn version --major --no-git-tag-version
@@ -56,35 +57,31 @@ jobs:
           fi
           new_version=$(node -p "require('./ui/package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-          git commit -am "chore: bump release version to $new_version"
-  
-    - name: Create release branch
-      id: create-branch
-      run: |
-          release_branch="release/v${{ steps.bump-version.outputs.new_version }}"
-          git checkout -b $release_branch
-          echo "release_branch=$release_branch" >> $GITHUB_OUTPUT
   
     - name: Generate changelog
       id: generate-changelog
       run: |
         npx conventional-changelog-cli --output-unreleased --preset angular > changelog.txt
-
-    - name: Update changelog
-      run: |
         cat changelog.txt >> CHANGELOG.md
         echo "## Previous Releases" >> CHANGELOG.md
         cat CHANGELOG.md >> CHANGELOG.md.tmp
         mv CHANGELOG.md.tmp CHANGELOG.md
-        git add CHANGELOG.md
-        git commit -m "docs: update changelog for v${{ steps.bump-version.outputs.new_version }}"
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
+      id: create-pull-request
+      uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ steps.create-branch.outputs.release_branch }}
-        base: main
+        branch: release/v${{ steps.bump-version.outputs.new_version }}
+        base: develop
         title: 'Release v${{ steps.bump-version.outputs.new_version }}'
         body-path: changelog.txt
-        reset: false
+        reviewers: acwilan
+        commit-message: 'chore: prepare release v${{ steps.bump-version.outputs.new_version }}'
+
+    - name: Add comment
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        body: Remember to change the target branch to `main` when merging this PR.
+        reactions: +1, rocket
