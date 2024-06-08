@@ -50,20 +50,20 @@ jobs:
             yarn version --patch --no-git-tag-version
           fi
           new_version=$(node -p "require('./ui/package.json').version")
-          echo "::set-output name=new_version::$new_version"
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
   
     - name: Create release branch
       id: create-branch
       run: |
           release_branch="release/v${{ steps.bump-version.outputs.new_version }}"
           git checkout -b $release_branch
-          echo "::set-output name=release_branch::$release_branch"
+          echo "release_branch=$release_branch" >> $GITHUB_OUTPUT
   
     - name: Generate changelog
       id: generate-changelog
       run: |
-        changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular --context ./ui)
-        echo "::set-output name=changelog::$changelog"
+        changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular)
+        echo "changelog=$changelog" >> $GITHUB_OUTPUT
 
     - name: Update changelog
       run: |
