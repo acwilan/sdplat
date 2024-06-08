@@ -36,8 +36,7 @@ jobs:
     - name: Generate changelog
       id: generate-changelog
       run: |
-        npx conventional-changelog-cli --output-unreleased --preset angular >> changelog.txt
-        echo "changelog=$(cat changelog.txt)" >> $GITHUB_OUTPUT
+        npx conventional-changelog-cli --output-unreleased --preset angular) >> changelog.txt
 
     - name: Get current version
       id: get-version
@@ -66,4 +65,4 @@ jobs:
       with:
         tag_name: v${{ steps.get-version.outputs.version }}
         release_name: Release v${{ steps.get-version.outputs.version }}
-        body: ${{ steps.generate-changelog.outputs.changelog }}
+        body-path: changelog.txt

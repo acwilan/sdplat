@@ -62,13 +62,11 @@ jobs:
     - name: Generate changelog
       id: generate-changelog
       run: |
-        npx conventional-changelog-cli --output-unreleased --preset angular >> changelog.txt
-        echo "changelog=$(cat changelog.txt)" >> $GITHUB_OUTPUT
+        npx conventional-changelog-cli --output-unreleased --preset angular > changelog.txt
 
     - name: Update changelog
       run: |
-        rm changelog.txt
-        echo "${{ steps.generate-changelog.outputs.changelog }}" >> CHANGELOG.md
+        cat changelog.txt >> CHANGELOG.md
         echo "## Previous Releases" >> CHANGELOG.md
         cat CHANGELOG.md >> CHANGELOG.md.tmp
         mv CHANGELOG.md.tmp CHANGELOG.md
@@ -82,6 +80,4 @@ jobs:
         branch: ${{ steps.create-branch.outputs.release_branch }}
         base: main
         title: 'Release v${{ steps.bump-version.outputs.new_version }}'
-        body: |
-          ## Changes
-          ${{ steps.generate-changelog.outputs.changelog }}
+        body-path: changelog.txt
