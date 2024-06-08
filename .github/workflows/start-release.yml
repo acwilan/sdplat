@@ -87,3 +87,4 @@ jobs:
         base: main
         title: 'Release v${{ steps.bump-version.outputs.new_version }}'
         body-path: changelog.txt
+        reset: false
