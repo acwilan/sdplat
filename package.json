@@ -1,6 +1,6 @@
 {
   "name": "sdplat",
-  "version": "1.0.0",
+  "version": "0.0.1-dev.0",
   "description": "Stable Diffusion Platform",
   "main": "index.js",
   "scripts": {
@@ -23,5 +23,8 @@
   "homepage": "https://github.com/acwilan/sdplat#readme",
   "dependencies": {
     "serve": "^14.2.3"
+  },
+  "devDependencies": {
+    "conventional-changelog": "^6.0.0"
   }
 }
