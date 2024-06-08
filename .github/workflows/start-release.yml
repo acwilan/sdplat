@@ -74,6 +74,13 @@ jobs:
         cat CHANGELOG.md >> CHANGELOG.md.tmp
         mv CHANGELOG.md.tmp CHANGELOG.md
 
+    - name: Push release branch
+      run: |
+        git add .
+        git commit -m "chore: prepare release v${{ steps.bump-version.outputs.new_version }}"
+        git push origin ${{ steps.create-branch.outputs.release_branch }}
+  
+
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v6
       with:
@@ -83,4 +90,3 @@ jobs:
         title: 'Release v${{ steps.bump-version.outputs.new_version }}'
         body-path: changelog.txt
         reviewers: acwilan
-        commit-message: 'chore: prepare release v${{ steps.bump-version.outputs.new_version }}'
