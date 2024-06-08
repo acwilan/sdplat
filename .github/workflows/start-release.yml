@@ -1,0 +1,116 @@
+name: Start Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      bumpType:
+        description: 'Version bump type (major, minor, patch)'
+        required: true
+        default: 'patch'
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+
+  start-release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write # Allow the workflow to write to the repository
+      pull-requests: write # Allow the workflow to create pull requests
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Required to retrieve commit history for changelog generation
+
+    - name: Configure Git user
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Pull develop branch
+      run: |
+        git checkout develop
+        git pull
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Bump version
+      id: bump-version
+      env:
+        BUMP_TYPE: ${{ github.event.inputs.bumpType }}
+      run: |
+          echo "Bump type is '$BUMP_TYPE'"
+          if [ "$BUMP_TYPE" == "major" ]; then
+            yarn --cwd ./ui version --major --no-git-tag-version
+            yarn version --major --no-git-tag-version
+          elif [ "$BUMP_TYPE" == "minor" ]; then
+            yarn --cwd ./ui version --minor --no-git-tag-version
+            yarn version --minor --no-git-tag-version
+          else
+            yarn --cwd ./ui version --patch --no-git-tag-version
+            yarn version --patch --no-git-tag-version
+          fi
+          new_version=$(node -p "require('./ui/package.json').version")
+          echo "new_version=$new_version" >> $GITHUB_OUTPUT
+  
+    - name: Generate changelog
+      id: generate-changelog
+      run: |
+        npx conventional-changelog-cli --output-unreleased --preset angular > changelog.txt
+        cat changelog.txt >> CHANGELOG.md
+        echo "## Previous Releases" >> CHANGELOG.md
+        cat CHANGELOG.md >> CHANGELOG.md.tmp
+        mv CHANGELOG.md.tmp CHANGELOG.md
+
+    - name: Create Pull Request
+      id: create-pull-request
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: release/v${{ steps.bump-version.outputs.new_version }}
+        base: develop
+        title: 'Release v${{ steps.bump-version.outputs.new_version }}'
+        body-path: changelog.txt
+        reviewers: acwilan
+        commit-message: 'chore: prepare release v${{ steps.bump-version.outputs.new_version }}'
+
+    - name: Add comment
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        body: Remember to change the target branch to `main` when merging this PR.
+        reactions: +1, rocket
+
+  merge-release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request_review.state == 'approved'
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: main
+
+    - name: Configure Git user
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+
+    - name: Fetch all branches
+      run: git fetch --all
+
+    - name: Merge release branch into main
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        RELEASE_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
+        git checkout main
+        git pull origin main
+        git merge --no-ff origin/$RELEASE_BRANCH
+        git push origin main
