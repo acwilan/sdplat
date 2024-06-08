@@ -80,11 +80,12 @@ jobs:
         git commit -m "docs: update changelog for v${{ steps.bump-version.outputs.new_version }}"
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ steps.create-branch.outputs.release_branch }}
         base: main
         title: 'Release v${{ steps.bump-version.outputs.new_version }}'
         body-path: changelog.txt
+        reviewers: acwilan
         reset: false
