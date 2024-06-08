@@ -11,7 +11,7 @@ This is a web interface for SD platform, written as a react application, that ac
 
 ## Configuration file
 
-You need to create a configuration file at the pat `./conf/sdConf.ts`. A sample file is provided so that you get an idea of the structure. This file is expected to be shared between the web ui and the bot.
+You need to create a configuration file at the pat `./conf/sdConf.ts`. A [sample file](../conf/sdConfig.sample.ts) is provided so that you get an idea of the structure. This file is expected to be shared between the web ui and the bot.
 
 ### Models
 
