@@ -41,6 +41,7 @@ jobs:
     - name: Get current version
       id: get-version
       run: |
+        rm changelog.txt
         version=$(node -p "require('./ui/package.json').version")
         echo "version=$version" >> $GITHUB_OUTPUT
 
