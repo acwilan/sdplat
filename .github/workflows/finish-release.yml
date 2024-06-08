@@ -36,12 +36,13 @@ jobs:
     - name: Generate changelog
       id: generate-changelog
       run: |
-        changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular)
-        echo "changelog=$changelog" >> $GITHUB_OUTPUT
+        npx conventional-changelog-cli --output-unreleased --preset angular >> changelog.txt
+        echo "changelog=$(cat changelog.txt)" >> $GITHUB_OUTPUT
 
     - name: Get current version
       id: get-version
       run: |
+        rm changelog.txt
         version=$(node -p "require('./ui/package.json').version")
         echo "version=$version" >> $GITHUB_OUTPUT
 
