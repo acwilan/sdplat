@@ -1,0 +1,68 @@
+name: Finish Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+permissions:
+  contents: write # Allow the workflow to write to the repository
+  pull-requests: write # Allow the workflow to create pull requests
+
+jobs:
+
+  finish-release:
+    if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Merge to develop
+      run: |
+        git checkout develop
+        git pull
+        git merge master
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Generate changelog
+      id: generate-changelog
+      run: |
+            changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular)
+            echo "::set-output name=changelog::$changelog"
+
+    - name: Get current version
+      id: get-version
+      run: |
+        version=$(node -p "require('./ui/package.json').version")
+        echo "::set-output name=version::$version"
+
+    - name: Bump development version
+      run: |
+        yarn --cwd ./ui version prerelease --preid=dev --no-git-tag-version
+        yarn version prerelease --preid=dev --no-git-tag-version
+        dev_version=$(node -p "require('./ui/package.json').version")
+        git commit -am "chore: bump development version to $dev_version"
+        git push origin develop
+
+    - name: Delete release branch
+      run: |
+        release_branch="${{ github.event.pull_request.head.ref }}"
+        git push --delete origin $release_branch
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.get-version.outputs.version }}
+        release_name: Release v${{ steps.get-version.outputs.version }}
+        body: ${{ steps.generate-changelog.outputs.changelog }}
