@@ -56,6 +56,7 @@ jobs:
           fi
           new_version=$(node -p "require('./ui/package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+          git commit -am "chore: bump release version to $new_version"
   
     - name: Create release branch
       id: create-branch
