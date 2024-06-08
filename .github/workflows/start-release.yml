@@ -68,6 +68,7 @@ jobs:
         mv CHANGELOG.md.tmp CHANGELOG.md
 
     - name: Create Pull Request
+      id: create-pull-request
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -77,3 +78,10 @@ jobs:
         body-path: changelog.txt
         reviewers: acwilan
         commit-message: 'chore: prepare release v${{ steps.bump-version.outputs.new_version }}'
+
+    - name: Add comment
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
+        body: Remember to change the target branch to 'main'
+        reactions: +1, rocket
