@@ -57,8 +57,8 @@ jobs:
 
     - name: Bump development version
       run: |
-        yarn --cwd ./ui version prerelease --preid=dev --no-git-tag-version
-        yarn version prerelease --preid=dev --no-git-tag-version
+        yarn --cwd ./ui version prerelease --preid=dev --no-git-tag-version --new-version prepatch
+        yarn version prerelease --preid=dev --no-git-tag-version --new-version prepatch
         dev_version=$(node -p "require('./ui/package.json').version")
         git commit -am "chore: bump development version to $dev_version"
         git push origin develop
