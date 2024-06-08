@@ -83,5 +83,5 @@ jobs:
       uses: peter-evans/create-or-update-comment@v4
       with:
         issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-        body: Remember to change the target branch to 'main'
+        body: Remember to change the target branch to `main` when merging this PR.
         reactions: +1, rocket
