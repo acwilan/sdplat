@@ -7,11 +7,14 @@ on:
         description: 'Version bump type (major, minor, patch)'
         required: true
         default: 'patch'
+  pull_request_review:
+    types: [submitted]
 
 jobs:
 
   start-release:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: write # Allow the workflow to write to the repository
       pull-requests: write # Allow the workflow to create pull requests
@@ -85,3 +88,29 @@ jobs:
         issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
         body: Remember to change the target branch to `main` when merging this PR.
         reactions: +1, rocket
+
+  merge-release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request_review.state == 'approved'
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: main
+
+    - name: Configure Git user
+      run: |
+        git config --global user.email "actions@github.com"
+        git config --global user.name "GitHub Actions"
+
+    - name: Fetch all branches
+      run: git fetch --all
+
+    - name: Merge release branch into main
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        RELEASE_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
+        git checkout main
+        git pull origin main
+        git merge --no-ff origin/$RELEASE_BRANCH
+        git push origin main

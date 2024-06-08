@@ -11,13 +11,14 @@ permissions:
   pull-requests: write # Allow the workflow to create pull requests
 
 jobs:
-
   finish-release:
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/')
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Ensure full history for changelog generation
 
     - name: Configure Git user
       run: |
@@ -29,11 +30,15 @@ jobs:
       with:
         node-version: '18'
 
+    - name: Fetch all branches
+      run: git fetch --all
+
     - name: Merge to develop
       run: |
         git checkout develop
-        git pull
-        git merge master
+        git pull origin develop
+        git merge origin/main
+        git push origin develop
 
     - name: Install dependencies
       run: yarn install --frozen-lockfile
@@ -41,7 +46,7 @@ jobs:
     - name: Generate changelog
       id: generate-changelog
       run: |
-        npx conventional-changelog-cli --output-unreleased --preset angular) >> changelog.txt
+        npx conventional-changelog-cli --output-unreleased --preset angular >> changelog.txt
 
     - name: Get current version
       id: get-version
@@ -57,11 +62,6 @@ jobs:
         dev_version=$(node -p "require('./ui/package.json').version")
         git commit -am "chore: bump development version to $dev_version"
         git push origin develop
-
-    - name: Delete release branch
-      run: |
-        release_branch="${{ github.event.pull_request.head.ref }}"
-        git push --delete origin $release_branch
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
