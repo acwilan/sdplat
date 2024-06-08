@@ -36,14 +36,14 @@ jobs:
     - name: Generate changelog
       id: generate-changelog
       run: |
-            changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular)
-            echo "::set-output name=changelog::$changelog"
+        changelog=$(npx conventional-changelog-cli --output-unreleased --preset angular)
+        echo "changelog=$changelog" >> $GITHUB_OUTPUT
 
     - name: Get current version
       id: get-version
       run: |
         version=$(node -p "require('./ui/package.json').version")
-        echo "::set-output name=version::$version"
+        echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Bump development version
       run: |
