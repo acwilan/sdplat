@@ -13,7 +13,7 @@ test('renders welcome message', () => {
       <App theme="light" />
     </MemoryRouter>
   );
-  const linkElement = screen.getByText(/Welcome/i);
+  const linkElement = screen.getByText(/welcome to sd plat/i);
   expect(linkElement).toBeInTheDocument();
 });
 
@@ -21,30 +21,29 @@ test('navigates to Txt2Img page when the card is clicked', () => {
   render(
     <MemoryRouter initialEntries={['/']}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home pathSegment='' />} />
         <Route path="/txt2img" element={<FormComponent models={mockModels} />} />
       </Routes>
     </MemoryRouter>
   );
 
-  // Click on the "Text to image (Txt2Img)" card
-  userEvent.click(screen.getByText(/Text to image \(Txt2Img\)/i));
+  // Click on the "Beam" card
+  userEvent.click(screen.getByText(/Beam/i));
 
   // Check if the FormComponent is rendered
-  expect(screen.getByText(/Text to image/i)).toBeInTheDocument();
+  expect(screen.getByText(/Beam/i)).toBeInTheDocument();
 });
 
 test('renders Home component at the root path', () => {
   render(
     <MemoryRouter initialEntries={['/']}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home pathSegment='' />} />
       </Routes>
     </MemoryRouter>
   );
 
   // Check if the Home component is rendered
-  expect(screen.getByText(/text to image \(txt2img\)/i)).toBeInTheDocument();
-  expect(screen.getByText(/image to image \(img2img\)/i)).toBeInTheDocument();
-  expect(screen.getByText(/text to video \(txt2vid\)/i)).toBeInTheDocument();
+  expect(screen.getByText(/Home/i)).toBeInTheDocument();
+  expect(screen.getByText(/Beam/i)).toBeInTheDocument();
 });

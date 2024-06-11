@@ -3,7 +3,6 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Txt2Img from '../../src/components/Txt2Img';
 import { FormComponent, FormData } from '../../src/components/FormComponent';
-import { BeamClient } from '../../src/api/beam/BeamClient';
 import { config } from '../../../conf/sdConfig';
 
 jest.mock('../../src/components/FormComponent', () => ({
@@ -11,6 +10,8 @@ jest.mock('../../src/components/FormComponent', () => ({
 }));
 
 const mockFetch = jest.fn();
+
+const { models } = config.beam;
 
 global.fetch = mockFetch;
 
@@ -20,12 +21,12 @@ describe('Txt2Img Component', () => {
     });
 
     test('renders FormComponent with correct props', () => {
-        render(<Txt2Img />);
+        render(<Txt2Img pathSegment='' />);
         expect(FormComponent).toHaveBeenCalledWith(
             expect.objectContaining({
                 submitHandler: expect.any(Function),
                 clearHandler: expect.any(Function),
-                models: config.models.sort((a, b) => a.name.localeCompare(b.name)),
+                models: models.sort((a, b) => a.name.localeCompare(b.name)),
             }),
             {}
         );
@@ -39,10 +40,10 @@ describe('Txt2Img Component', () => {
             json: async () => ({ status: 'COMPLETE', outputs: { './output.png': { url: 'https://example.com/image.jpg' } } })
         });
 
-        render(<Txt2Img />);
+        render(<Txt2Img pathSegment='' />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: config.models[0].id, height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'test prompt', model: models[0].id, height: '', width: '', negativePrompt: '' };
 
         await act(async () => submitHandler(formData));
 
@@ -78,10 +79,10 @@ describe('Txt2Img Component', () => {
             json: async () => ({ status: 'ERROR', message: 'test error' })
         });
 
-        render(<Txt2Img />);
+        render(<Txt2Img pathSegment='' />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: config.models[0].id, height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'test prompt', model: models[0].id, height: '', width: '', negativePrompt: '' };
 
         await act(async () => submitHandler(formData));
 
@@ -109,7 +110,7 @@ describe('Txt2Img Component', () => {
     });
 
     test('handles form clearing', () => {
-        render(<Txt2Img />);
+        render(<Txt2Img pathSegment='' />);
 
         const clearHandler = (FormComponent as jest.Mock).mock.calls[0][0].clearHandler as () => void;
 

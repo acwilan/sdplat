@@ -5,7 +5,7 @@ import Sidebar from '../../src/components/Sidebar';
 
 describe('Sidebar', () => {
   test('should toggle sidebar when button is clicked', () => {
-    const { getByRole } = render(<Sidebar />);
+    const { getByRole } = render(<Sidebar pathSegment='' />);
     const button = getByRole('button', { name: 'Toggle Sidebar' });
 
     fireEvent.click(button);
@@ -14,7 +14,7 @@ describe('Sidebar', () => {
   });
 
   test('should persist sidebar state to local storage', () => {
-    const { getByRole } = render(<Sidebar />);
+    const { getByRole } = render(<Sidebar pathSegment='' />);
     const button = getByRole('button', { name: 'Toggle Sidebar' });
     let storedValue = localStorage.getItem('sidebarCollapsed');
     const expectedValue = storedValue ? !JSON.parse(storedValue) : false;
