@@ -26,8 +26,21 @@ for APP in "${APPS[@]}"; do
     IFS='|' read -ra PAIR <<< "$APP"
     ID="${PAIR[0]}"
     NAME="${PAIR[1]}"
+    TARGETS="${PAIR[2]}"
+    
     echo "        \"$ID\": {" >> $OUTPUT_FILE
-    echo "            name: \"$NAME\"" >> $OUTPUT_FILE
+    echo "            name: \"$NAME\"," >> $OUTPUT_FILE
+    
+    # Parse targets and add to the output file
+    IFS=':' read -ra TARGET_ARRAY <<< "$TARGETS"
+    echo "            targets: [" >> $OUTPUT_FILE
+    for TARGET in "${TARGET_ARRAY[@]}"; do
+        echo "                \"$TARGET\"," >> $OUTPUT_FILE
+    done
+    # Remove the last comma to avoid syntax error in JSON
+    sed -i '$ s/,$//' $OUTPUT_FILE
+    
+    echo "            ]" >> $OUTPUT_FILE
     echo "        }," >> $OUTPUT_FILE
 done
 

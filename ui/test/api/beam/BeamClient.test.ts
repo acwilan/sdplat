@@ -1,4 +1,4 @@
-import { BeamClient, Txt2ImgRequest } from '../../../src/api/beam/BeamClient';
+import { BeamClient, TextPromptRequest } from '../../../src/api/beam';
 
 // Mocking fetch
 const fetchMock = jest.fn();
@@ -17,7 +17,7 @@ describe('BeamClient', () => {
     describe('txt2img', () => {
         it('should return task_id on success', async () => {
             const appId = 'testAppId';
-            const request: Txt2ImgRequest = { prompt: 'test prompt' };
+            const request: TextPromptRequest = { prompt: 'test prompt' };
             const taskId = '12345';
 
             fetchMock.mockResolvedValueOnce({
@@ -25,7 +25,7 @@ describe('BeamClient', () => {
                 json: async () => ({ task_id: taskId }),
             });
 
-            const result = await client.txt2img(appId, request);
+            const result = await client.textPrompt(appId, request);
 
             expect(fetchMock).toHaveBeenCalledWith(
                 `https://${appId}.apps.beam.cloud`,
@@ -44,13 +44,13 @@ describe('BeamClient', () => {
 
         it('should throw an error on invalid response status', async () => {
             const appId = 'testAppId';
-            const request: Txt2ImgRequest = { prompt: 'test prompt' };
+            const request: TextPromptRequest = { prompt: 'test prompt' };
 
             fetchMock.mockResolvedValueOnce({
                 status: 400,
             });
 
-            await expect(client.txt2img(appId, request)).rejects.toThrow('Invalid response 400');
+            await expect(client.textPrompt(appId, request)).rejects.toThrow('Invalid response 400');
         });
     });
 

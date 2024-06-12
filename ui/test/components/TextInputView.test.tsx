@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Txt2Img from '../../src/components/Txt2Img';
+import TextInputView from '../../src/components/TextInputView';
 import { FormComponent, FormData } from '../../src/components/FormComponent';
 import { config } from '../../../conf/sdConfig';
 
@@ -15,13 +15,17 @@ const { models } = config.beam;
 
 global.fetch = mockFetch;
 
-describe('Txt2Img Component', () => {
+const apiCall = async (formData: FormData): Promise<string> => {
+    return new Promise<string>((resolve) => resolve('http://exmple.com'));
+}
+
+describe('TextInputView Component', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
     test('renders FormComponent with correct props', () => {
-        render(<Txt2Img pathSegment='' />);
+        render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
         expect(FormComponent).toHaveBeenCalledWith(
             expect.objectContaining({
                 submitHandler: expect.any(Function),
@@ -44,7 +48,7 @@ describe('Txt2Img Component', () => {
             json: async () => ({ status: 'COMPLETE', outputs: { './output.png': { url: 'https://example.com/image.jpg' } } })
         });
 
-        render(<Txt2Img pathSegment='' />);
+        render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
         const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
@@ -83,7 +87,7 @@ describe('Txt2Img Component', () => {
             json: async () => ({ status: 'ERROR', message: 'test error' })
         });
 
-        render(<Txt2Img pathSegment='' />);
+        render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
         const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
@@ -114,7 +118,7 @@ describe('Txt2Img Component', () => {
     });
 
     test('handles form clearing', () => {
-        render(<Txt2Img pathSegment='' />);
+        render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const clearHandler = (FormComponent as jest.Mock).mock.calls[0][0].clearHandler as () => void;
 
