@@ -64,7 +64,7 @@ describe('TextInputView Component', () => {
         const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
 
         // Log to ensure the submitHandler is called
-        console.log('Calling submitHandler with formData:', formData);
+        // console.log('Calling submitHandler with formData:', formData);
 
         await act(async () => submitHandler(formData));
 
@@ -84,7 +84,7 @@ describe('TextInputView Component', () => {
         const formData: FormData = { prompt: 'error prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
 
         // Log to ensure the submitHandler is called
-        console.log('Calling submitHandler with formData:', formData);
+        // console.log('Calling submitHandler with formData:', formData);
 
         await act(async () => submitHandler(formData));
 
