@@ -1,7 +1,7 @@
 // src/components/FormComponent.test.tsx
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
-import { FormComponent, FormData, ModelInfo } from '../../src/components/FormComponent';
+import { FormComponent, FormData } from '../../src/components/FormComponent';
 import { mockModels } from '../mocks/models';
 
 const promiseHandler: (formData: FormData) => Promise<any> = (formData: FormData) => {
@@ -12,7 +12,7 @@ const promiseHandler: (formData: FormData) => Promise<any> = (formData: FormData
 
 describe('FormComponent', () => {
   test('should update form data when inputs change', () => {
-    const { getByLabelText } = render(<FormComponent models={mockModels} />);
+    const { getByLabelText } = render(<FormComponent title='' models={mockModels} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
@@ -28,7 +28,7 @@ describe('FormComponent', () => {
   });
 
   test('should clear form data when Clear button is clicked', () => {
-    const { getByText, getByLabelText } = render(<FormComponent models={mockModels} clearHandler={() => {}} />);
+    const { getByText, getByLabelText } = render(<FormComponent title='' models={mockModels} clearHandler={() => {}} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });
@@ -46,7 +46,7 @@ describe('FormComponent', () => {
   });
 
   test('should persist form data to local storage when Submit button is clicked', async () => {
-    const { getByText, getByLabelText } = render(<FormComponent models={mockModels} submitHandler={promiseHandler} clearHandler={() => console.log('clear')} />);
+    const { getByText, getByLabelText } = render(<FormComponent title='' models={mockModels} submitHandler={promiseHandler} clearHandler={() => console.log('clear')} />);
 
     fireEvent.change(getByLabelText('Prompt:'), { target: { value: 'Test Prompt' } });
     fireEvent.change(getByLabelText('Model:'), { target: { value: '2' } });

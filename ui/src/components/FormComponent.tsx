@@ -5,6 +5,7 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 export type ModelInfo = {
   id: string;
   name: string;
+  targets?: string[],
   description?: string;
   beamId?: string;
   baseModel?: string;
@@ -33,9 +34,10 @@ export interface FormComponentProps {
   clearHandler?: () => void;
   requestCompleted?: () => void;
   models: ModelInfo[];
+  title: string;
 }
 
-export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, models, clearHandler, requestCompleted }) => {
+export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, models, clearHandler, requestCompleted, title }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormBlocked, setIsFormBlocked] = useState(false);
@@ -79,7 +81,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
 
   return (
     <>
-      <h2>Text to image</h2>
+      <h2>{title}</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group as={Row} controlId="formPrompt">
           <Form.Label column sm={2}>Prompt:</Form.Label>

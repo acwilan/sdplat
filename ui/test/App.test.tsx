@@ -22,7 +22,7 @@ test('navigates to Txt2Img page when the card is clicked', () => {
     <MemoryRouter initialEntries={['/']}>
       <Routes>
         <Route path="/" element={<Home pathSegment='' />} />
-        <Route path="/txt2img" element={<FormComponent models={mockModels} />} />
+        <Route path="/txt2img" element={<FormComponent title='' models={mockModels} />} />
       </Routes>
     </MemoryRouter>
   );
