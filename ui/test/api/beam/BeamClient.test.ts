@@ -1,4 +1,4 @@
-import { BeamClient, TextPromptRequest } from '../../../src/api/beam';
+import { BeamClient, TextPromptRequest } from '../../../src/api';
 
 // Mocking fetch
 const fetchMock = jest.fn();

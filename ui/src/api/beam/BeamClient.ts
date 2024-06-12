@@ -64,6 +64,7 @@ export class BeamClient {
                                 : reject('Output value is not present in response');
                         }
                         if (data.status !== 'PENDING' && data.status !== 'RUNNING') {
+                            clearInterval(poll);
                             reject(data.status);
                         }
                     })

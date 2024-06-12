@@ -15,11 +15,18 @@ const { models } = config.beam;
 
 global.fetch = mockFetch;
 
-const apiCall = async (formData: FormData): Promise<string> => {
-    return new Promise<string>((resolve) => resolve('http://exmple.com'));
-}
-
 describe('TextInputView Component', () => {
+
+    const apiCall = jest.fn().mockImplementation((formData: FormData) => {
+        return new Promise((resolve, reject) => {
+            if (formData.prompt === 'test prompt') {
+                resolve('https://example.com/image.jpg');
+            } else {
+                reject(new Error('API call failed'));
+            }
+        });
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -33,88 +40,62 @@ describe('TextInputView Component', () => {
                 models: Object.entries(models)
                     .map(([id, model]) => ({
                         id,
-                        name: model.name
-                    })).sort((a, b) => a.name.localeCompare(b.name)),
+                        name: model.name,
+                        targets: model.targets
+                    }))
+                    .filter(model => model.targets.some((target: string) => target === 'txt2img'))
+                    .sort((a, b) => a.name.localeCompare(b.name)),
             }),
             {}
         );
     });
 
     test('handles form submission successfully', async () => {
-        mockFetch.mockResolvedValueOnce({
-            status: 200,
-            json: async () => ({ task_id: 'task-id' })
-        }).mockResolvedValueOnce({
-            json: async () => ({ status: 'COMPLETE', outputs: { './output.png': { url: 'https://example.com/image.jpg' } } })
-        });
-
         render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
+
+        // Ensure FormComponent is called with correct props
+        expect(FormComponent).toHaveBeenCalledWith(expect.objectContaining({
+            submitHandler: expect.any(Function),
+            clearHandler: expect.any(Function),
+            models: expect.any(Array),
+        }), {});
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
         const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
 
+        // Log to ensure the submitHandler is called
+        console.log('Calling submitHandler with formData:', formData);
+
         await act(async () => submitHandler(formData));
 
-        expect(mockFetch).toHaveBeenCalledTimes(2);
-        expect(mockFetch).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
-            method: 'POST',
-            headers: expect.objectContaining({
-                'Authorization': expect.any(String),
-                'Content-Type': 'application/json',
-            }),
-            body: JSON.stringify({ prompt: 'test prompt' })
-        }));
-        await waitFor(() => {
-            expect(mockFetch).toHaveBeenCalledWith(
-                `https://api.beam.cloud/v1/task/task-id/status/`,
-                expect.objectContaining({
-                    headers: expect.objectContaining({
-                        'Authorization': expect.any(String),
-                    }),
-                })
-            );
-        });
+        expect(apiCall).toHaveBeenCalledTimes(1);
+        expect(apiCall).toHaveBeenCalledWith(formData);
 
-        expect(screen.getByText("Here's your image")).toBeInTheDocument();
-        expect(screen.getByRole('img')).toHaveAttribute('src', 'https://example.com/image.jpg');
+        await waitFor(() => {
+            expect(screen.getByText("Here's your image")).toBeInTheDocument();
+            expect(screen.getByRole('img')).toHaveAttribute('src', 'https://example.com/image.jpg');
+        });
     });
 
     test('handles form submission failure', async () => {
-        mockFetch.mockResolvedValueOnce({
-            status: 200,
-            json: async () => ({ task_id: 'task-id' })
-        }).mockResolvedValueOnce({
-            json: async () => ({ status: 'ERROR', message: 'test error' })
-        });
-
         render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'error prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
+
+        // Log to ensure the submitHandler is called
+        console.log('Calling submitHandler with formData:', formData);
 
         await act(async () => submitHandler(formData));
 
-        expect(mockFetch).toHaveBeenCalledTimes(2);
-        expect(mockFetch).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
-            method: 'POST',
-            headers: expect.objectContaining({
-                'Authorization': expect.any(String),
-                'Content-Type': 'application/json',
-            }),
-            body: JSON.stringify({ prompt: 'test prompt' })
-        }));
-        await waitFor(() => {
-            expect(mockFetch).toHaveBeenCalledWith(
-                `https://api.beam.cloud/v1/task/task-id/status/`,
-                expect.objectContaining({
-                    headers: expect.objectContaining({
-                        'Authorization': expect.any(String),
-                    }),
-                })
-            );
-        });
+        expect(apiCall).toHaveBeenCalledTimes(1);
+        expect(apiCall).toHaveBeenCalledWith(formData);
 
-        expect(screen.getByText('There was an error: "ERROR"')).toBeInTheDocument();
+        expect(mockFetch).toHaveBeenCalledTimes(0);
+
+        await waitFor(() => {
+            expect(screen.getByText(/There was an error:/)).toBeInTheDocument();
+        });
     });
 
     test('handles form clearing', () => {

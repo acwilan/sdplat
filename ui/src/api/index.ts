@@ -1,1 +1,1 @@
-export * from './beam/BeamClient';
+export * from './beam';
