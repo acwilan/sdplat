@@ -1,4 +1,15 @@
-export interface Txt2ImgRequest {
+interface Output {
+    url: string;
+}
+
+interface TaskStatusResponse {
+    status: string;
+    outputs: {
+        [key: string]: Output;
+    };
+}
+
+export interface TextPromptRequest {
     prompt: string;
     negative_prompt?: string | undefined;
     height?: number | undefined;
@@ -14,7 +25,7 @@ export class BeamClient {
         this.pollInterval = params.pollInterval || 3000;
     }
 
-    public async txt2img(appId: string, params: Txt2ImgRequest): Promise<string> {
+    public async textPrompt(appId: string, params: TextPromptRequest): Promise<string> {
         const url = `https://${appId}.apps.beam.cloud`;
         const authHeader = `Basic ${this.authToken}`;
         return fetch(
@@ -44,12 +55,16 @@ export class BeamClient {
                     }
                 })
                     .then(response => response.json())
-                    .then(data => {
+                    .then((data: TaskStatusResponse) => {
                         if (data.status === 'COMPLETE') {
                             clearInterval(poll);
-                            return resolve(data.outputs['./output.png'].url);
+                            const outputValues = Object.values(data.outputs);
+                            return outputValues.length > 0 
+                                ? resolve(outputValues[0].url)
+                                : reject('Output value is not present in response');
                         }
                         if (data.status !== 'PENDING' && data.status !== 'RUNNING') {
+                            clearInterval(poll);
                             reject(data.status);
                         }
                     })

@@ -33,7 +33,7 @@ const Sidebar: React.FC<PathComponentProps> = ({ pathSegment }) => {
           <Nav className="flex-column">
             <Nav.Link href={`/${pathSegment}/txt2Img`}>Text to image</Nav.Link>
             <Nav.Link as={NavbarText}>Image to image</Nav.Link>
-            <Nav.Link as={NavbarText}>Text to video</Nav.Link>
+            <Nav.Link href={`/${pathSegment}/txt2vid`}>Text to video</Nav.Link>
           </Nav>
         </div>
       </Collapse>
