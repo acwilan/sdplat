@@ -26,7 +26,11 @@ describe('Txt2Img Component', () => {
             expect.objectContaining({
                 submitHandler: expect.any(Function),
                 clearHandler: expect.any(Function),
-                models: models.sort((a, b) => a.name.localeCompare(b.name)),
+                models: Object.entries(models)
+                    .map(([id, model]) => ({
+                        id,
+                        name: model.name
+                    })).sort((a, b) => a.name.localeCompare(b.name)),
             }),
             {}
         );
@@ -43,7 +47,7 @@ describe('Txt2Img Component', () => {
         render(<Txt2Img pathSegment='' />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: models[0].id, height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
 
         await act(async () => submitHandler(formData));
 
@@ -82,7 +86,7 @@ describe('Txt2Img Component', () => {
         render(<Txt2Img pathSegment='' />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: models[0].id, height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
 
         await act(async () => submitHandler(formData));
 

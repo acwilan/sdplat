@@ -44,6 +44,6 @@ test('renders Home component at the root path', () => {
   );
 
   // Check if the Home component is rendered
-  expect(screen.getByText(/Home/i)).toBeInTheDocument();
+  expect(screen.getByText(/Welcome to sd plat/i)).toBeInTheDocument();
   expect(screen.getByText(/Beam/i)).toBeInTheDocument();
 });

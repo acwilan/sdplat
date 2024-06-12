@@ -6,7 +6,11 @@ import OutputView from "./OutputView";
 import { PathComponentProps } from "../types";
 
 const { authToken, models } = config.beam;
-const sortedModels: ModelInfo[] = models.sort((a: ModelInfo, b: ModelInfo) => a.name.localeCompare(b.name));
+const sortedModels: ModelInfo[] = Object.entries(models)
+    .map(([id, model]) => ({
+        id,
+        name: model.name
+    })).sort((a: ModelInfo, b: ModelInfo) => a.name.localeCompare(b.name));
 const modelMap: { [id: string ]: ModelInfo} = sortedModels.reduce((map, model) => {
     map[model.id] = model;
     return map;
