@@ -19,5 +19,5 @@
   "include": [
     "./src/**/**.*",
     "../conf"
-  ]
+, "test/api/modelslab/ModelsLabClient.test.ts"  ]
 }

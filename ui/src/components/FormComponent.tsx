@@ -73,7 +73,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
   useEffect(() => {
     const isValid = formData !== undefined && (
       (formData.prompt !== undefined && formData.prompt.trim() !== '') &&
-      (formData.model !== undefined && formData.model.trim() !== '')
+      (models.length == 0 || (formData.model !== undefined && formData.model.trim() !== ''))
     );
     setIsFormValid(isValid);
     localStorage.setItem('formData', JSON.stringify(formData));
@@ -89,6 +89,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
             <Form.Control as="textarea" rows={3} name="prompt" value={formData.prompt} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
+        {models.length > 0 && (
         <Form.Group as={Row} controlId="formModel">
           <Form.Label column sm={2}>Model:</Form.Label>
           <Col sm={10}>
@@ -101,7 +102,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
               ))}
             </Form.Control>
           </Col>
-        </Form.Group>
+        </Form.Group>)}
         <Form.Group as={Row} controlId="formHeight">
           <Form.Label column sm={2}>Height:</Form.Label>
           <Col sm={10}>

@@ -15,5 +15,8 @@ export const config = {
             }
         },
         authToken: 'beamAuthToken'
+    },
+    modelsLab: {
+        apiKey: 'modelsLabAuthToken'
     }
 };

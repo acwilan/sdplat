@@ -1,8 +1,8 @@
-import { BeamClient } from '../../src/api/beam';
+import { BeamClient } from '../../src/api/beam/BeamClient';
 import { beamApiCall } from '../../src/api/apiCalls';
 import { FormData } from '../../src/components/FormComponent';
 
-jest.mock('../../src/api/beam', () => {
+jest.mock('../../src/api/beam/BeamClient', () => {
   return {
     BeamClient: jest.fn().mockImplementation(() => ({
       textPrompt: jest.fn().mockResolvedValue('mockTaskId'),
