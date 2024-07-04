@@ -49,5 +49,8 @@ sed -i '$ s/,$//' $OUTPUT_FILE
 
 echo "    }," >> $OUTPUT_FILE
 echo "    authToken: '$BEAM_AUTH_TOKEN'" >> $OUTPUT_FILE
+echo "  }," >> $OUTPUT_FILE
+echo "  modelsLab: {" >> $OUTPUT_FILE
+echo "    apiKey: '${MODELSLAB_API_KEY}'" >> $OUTPUT_FILE
 echo "  }" >> $OUTPUT_FILE
 echo "};" >> $OUTPUT_FILE
