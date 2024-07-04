@@ -1,3 +1,5 @@
+import TextPromptRequest from '../TextPromptRequest';
+
 interface Output {
     url: string;
 }
@@ -7,13 +9,6 @@ interface TaskStatusResponse {
     outputs: {
         [key: string]: Output;
     };
-}
-
-export interface TextPromptRequest {
-    prompt: string;
-    negative_prompt?: string | undefined;
-    height?: number | undefined;
-    width?: number | undefined;
 }
 
 export class BeamClient {

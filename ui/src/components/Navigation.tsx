@@ -9,7 +9,7 @@ const Navigation: React.FC = () => {
         <Nav className="me-auto">
           <Nav.Link as={NavLink} to="/">Home</Nav.Link>
           <Nav.Link as={NavLink} to="/beam">Beam</Nav.Link>
-          <Nav.Link as={NavbarText}>Modelslab</Nav.Link>
+          <Nav.Link as={NavLink} to="/modelslab">Modelslab</Nav.Link>
           <Nav.Link as={NavbarText}>Stability AI</Nav.Link>
         </Nav>
       </Navbar.Collapse>

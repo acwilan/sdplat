@@ -10,9 +10,10 @@ const Home: React.FC<PathComponentProps> = ({ pathSegment }) => {
   const features = pathSegment ? [
     { name: 'Text to image (Txt2Img)', path: `/${pathSegment}/txt2img` },
     { name: 'Image to image (Img2Img)', path: '' },
-    { name: 'Text to video (Txt2Vid)', path: '' },
+    { name: 'Text to video (Txt2Vid)', path: `/${pathSegment}/txt2vid` },
   ] : [
-    { name: 'Beam', path: '/beam' }
+    { name: 'Beam', path: '/beam' },
+    { name: 'ModelsLab', path: '/modelslab' }
   ];
 
   const title: string = camelCaseToSentence(pathSegment || 'welcomeToSdPlat');
