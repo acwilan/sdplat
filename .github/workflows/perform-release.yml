@@ -30,7 +30,9 @@ jobs:
     - name: Setup git flow
       run: |
         sudo apt-get install git-flow
-        git flow init -d --master main -t 'v'
+        git flow config set master main        
+        git flow config set prefix versiontag v
+        git flow init -d
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
