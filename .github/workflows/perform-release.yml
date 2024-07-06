@@ -30,6 +30,8 @@ jobs:
     - name: Setup git flow
       run: |
         sudo apt-get install git-flow
+        git flow config set master main        
+        git flow config set prefix versiontag v
         git flow init -d
 
     - name: Setup Node.js
@@ -67,7 +69,7 @@ jobs:
     - name: Start git flow release
       run: |
         git stash
-        git flow release start v${{ steps.bump-version.outputs.new_version }}
+        git flow release start ${{ steps.bump-version.outputs.new_version }}
         git stash pop
         git commit -am "chore: Bump release version to v${{ steps.bump-version.outputs.new_version }}"
   
@@ -83,7 +85,7 @@ jobs:
 
     - name: Finish release
       run: |
-        git flow release finish v${{ steps.bump-version.outputs.new_version }}
+        git flow release finish ${{ steps.bump-version.outputs.new_version }}
         git push origin main
         git push origin develop
         git push --tags
