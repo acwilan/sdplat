@@ -8,6 +8,3 @@
 * Create basic UI ([#9](https://github.com/acwilan/sdplat/issues/9)) ([083f5cd](https://github.com/acwilan/sdplat/commit/083f5cd53c73febdd44f5e794d112cf53ffd2404))
 * Wire beam api with form ([#13](https://github.com/acwilan/sdplat/issues/13)) ([cdb48f4](https://github.com/acwilan/sdplat/commit/cdb48f428e23ffc4330af38c4465ec52cd795cb3))
 
-
-
-## Previous Releases
