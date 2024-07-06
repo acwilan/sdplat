@@ -131,3 +131,15 @@ dist
 
 sdConfig.ts
 changelog.txt
+
+api/beam/img2vid/*
+!api/beam/img2vid/svd.py
+api/beam/txt2img/*
+!api/beam/txt2img/common.py
+!api/beam/txt2img/sd1.5.py
+!api/beam/txt2img/sd2.py
+!api/beam/txt2img/sdxl-turbo.py
+!api/beam/txt2img/sdxl.py
+api/beam/txt2vid/*
+!api/beam/txt2vid/common.py
+!api/beam/txt2vid/animatediff*.py
