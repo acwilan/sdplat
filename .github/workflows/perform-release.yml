@@ -1,4 +1,4 @@
-name: Start Release
+name: Perform Release
 
 on:
   workflow_dispatch:
@@ -7,8 +7,6 @@ on:
         description: 'Version bump type (major, minor, patch)'
         required: true
         default: 'patch'
-  pull_request_review:
-    types: [submitted]
 
 jobs:
 
@@ -28,6 +26,11 @@ jobs:
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
+
+    - name: Setup git flow
+      run: |
+        sudo apt-get install git-flow
+        git flow init -d
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -60,57 +63,44 @@ jobs:
           fi
           new_version=$(node -p "require('./ui/package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
+
+    - name: Start git flow release
+      run: |
+        git stash
+        git flow release start v${{ steps.bump-version.outputs.new_version }}
+        git stash pop
+        git commit -am "chore: Bump release version to v${{ steps.bump-version.outputs.new_version }}"
   
     - name: Generate changelog
       id: generate-changelog
       run: |
         npx conventional-changelog-cli --output-unreleased --preset angular > changelog.txt
-        cat changelog.txt >> CHANGELOG.md
-        echo "## Previous Releases" >> CHANGELOG.md
+        cat changelog.txt >> CHANGELOG.md.tmp
+        echo "## Previous Releases" >> CHANGELOG.md.tmp
         cat CHANGELOG.md >> CHANGELOG.md.tmp
         mv CHANGELOG.md.tmp CHANGELOG.md
+        git commit -am "doc: Add changelog"
 
-    - name: Create Pull Request
-      id: create-pull-request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: release/v${{ steps.bump-version.outputs.new_version }}
-        base: develop
-        title: 'Release v${{ steps.bump-version.outputs.new_version }}'
-        body-path: changelog.txt
-        reviewers: acwilan
-        commit-message: 'chore: prepare release v${{ steps.bump-version.outputs.new_version }}'
-
-    - name: Add comment
-      uses: peter-evans/create-or-update-comment@v4
-      with:
-        issue-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-        body: Remember to change the target branch to `main` when merging this PR.
-        reactions: +1, rocket
-
-  merge-release:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request_review.state == 'approved'
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-        ref: main
-
-    - name: Configure Git user
+    - name: Finish release
       run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
-
-    - name: Fetch all branches
-      run: git fetch --all
-
-    - name: Merge release branch into main
-      run: |
-        PR_NUMBER=${{ github.event.pull_request.number }}
-        RELEASE_BRANCH=$(gh pr view $PR_NUMBER --json headRefName --jq '.headRefName')
-        git checkout main
-        git pull origin main
-        git merge --no-ff origin/$RELEASE_BRANCH
+        git flow release finish v${{ steps.bump-version.outputs.new_version }}
         git push origin main
+        git push origin develop
+        git push --tags
+
+    - name: Bump development version
+      run: |
+        yarn --cwd ./ui version prerelease --preid=dev --no-git-tag-version --new-version prepatch
+        yarn version prerelease --preid=dev --no-git-tag-version --new-version prepatch
+        dev_version=$(node -p "require('./ui/package.json').version")
+        git commit -am "chore: bump development version to $dev_version"
+        git push origin develop
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.get-version.outputs.version }}
+        release_name: Release v${{ steps.get-version.outputs.version }}
+        body-path: changelog.txt
