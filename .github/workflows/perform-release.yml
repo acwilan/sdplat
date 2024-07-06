@@ -26,11 +26,12 @@ jobs:
       run: |
         git config --global user.email "actions@github.com"
         git config --global user.name "GitHub Actions"
+        git config --global gitflow.branch.master main
 
     - name: Setup git flow
       run: |
         sudo apt-get install git-flow
-        git flow init -d --defaults --start-main main
+        git flow init -d
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
