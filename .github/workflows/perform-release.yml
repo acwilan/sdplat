@@ -84,13 +84,14 @@ jobs:
 
     - name: Finish release
       run: |
-        git flow release finish v${{ steps.bump-version.outputs.new_version }}
+        git flow release finish v${{ steps.bump-version.outputs.new_version }} -m "Release v${{ steps.bump-version.outputs.new_version }}"
         git push origin main
         git push origin develop
         git push --tags
 
     - name: Bump development version
       run: |
+        git checkout develop
         yarn --cwd ./ui version prerelease --preid=dev --no-git-tag-version --new-version prepatch
         yarn version prerelease --preid=dev --no-git-tag-version --new-version prepatch
         dev_version=$(node -p "require('./ui/package.json').version")
@@ -102,6 +103,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ steps.get-version.outputs.version }}
-        release_name: Release v${{ steps.get-version.outputs.version }}
+        tag_name: v${{ steps.bump-version.outputs.new_version }}
+        release_name: Release v${{ steps.bump-version.outputs.new_version }}
         body-path: changelog.txt

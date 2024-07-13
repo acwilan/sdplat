@@ -1,6 +1,7 @@
 // src/components/FormComponent.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 
 export type ModelInfo = {
   id: string;
@@ -17,6 +18,7 @@ export type FormData = {
   height: string;
   width: string;
   negativePrompt: string;
+  transcript: string;
 }
 
 const emptyForm: FormData = {
@@ -24,7 +26,8 @@ const emptyForm: FormData = {
   model: '',
   height: '',
   width: '',
-  negativePrompt: ''
+  negativePrompt: '',
+  transcript: '',
 }
 const storedFormDataStr: string = localStorage.getItem("formData") || JSON.stringify(emptyForm);
 const initialFormData: FormData = JSON.parse(storedFormDataStr);
@@ -41,6 +44,10 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormBlocked, setIsFormBlocked] = useState(false);
+
+  const path = useLocation().pathname;
+  // get latest segment from path
+  const lastSegment = path.split('/').pop();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -103,6 +110,15 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
             </Form.Control>
           </Col>
         </Form.Group>)}
+        {lastSegment === 'txt2spch' && (<>
+        <Form.Group as={Row} controlId="formTranscript">
+          <Form.Label column sm={2}>Transcript:</Form.Label>
+          <Col sm={10}>
+            <Form.Control as="textarea" rows={3} name="transcript" value={formData.transcript} onChange={handleChange} disabled={isFormBlocked} />
+          </Col>
+        </Form.Group>
+        </>)}
+        {lastSegment === 'txt2img' && (<>
         <Form.Group as={Row} controlId="formHeight">
           <Form.Label column sm={2}>Height:</Form.Label>
           <Col sm={10}>
@@ -115,6 +131,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
             <Form.Control type="number" name="width" value={formData.width} onChange={handleChange} disabled={isFormBlocked} />
           </Col>
         </Form.Group>
+        </>)}
         <Form.Group as={Row} controlId="formNegativePrompt">
           <Form.Label column sm={2}>Negative Prompt:</Form.Label>
           <Col sm={10}>
