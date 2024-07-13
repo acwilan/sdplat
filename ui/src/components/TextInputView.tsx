@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FormComponent, FormData, ModelInfo } from "./FormComponent";
-import OutputView from "./OutputView";
+import OutputView, { OutputType } from "./OutputView";
+import useLastSegment from "../hooks/use-last-segment";
 
 interface TextInputViewProps {
     title: string;
@@ -22,17 +23,22 @@ const TextInputView: React.FC<TextInputViewProps> = ({ title, modelTarget, apiCa
         return map;
     }, {} as { [id: string]: ModelInfo });
 
-    const [ imgUrl, setImgUrl ] = useState<string>('');
+    const lastSegment = useLastSegment();
+    const outputType: OutputType = (lastSegment === 'txt2aud' || lastSegment === 'txt2spch')
+        ? OutputType.AUDIO 
+        : OutputType.IMAGE;
+
+    const [ outputUrl, setOutputUrl ] = useState<string>('');
     const [ outputMessage, setOutputMessage ] = useState<string>('');
     const [ messageType, setMessageType ] = useState<'success' | 'danger' | 'info'>();
 
     const formSubmitted = async (formData: FormData) => {
-        setImgUrl('');
+        setOutputUrl('');
         setOutputMessage('Loading');
         setMessageType('info');
         return apiCall(formData).then(url => {
-            setImgUrl(url);
-            setOutputMessage("Here's your image");
+            setOutputUrl(url);
+            setOutputMessage("Here's your result");
             setMessageType('success');
         }).catch(e => {
             setOutputMessage(`There was an error: ${JSON.stringify(e)}`);
@@ -41,14 +47,14 @@ const TextInputView: React.FC<TextInputViewProps> = ({ title, modelTarget, apiCa
     }
 
     const formCleared = () => {
-        setImgUrl('');
+        setOutputUrl('');
         setOutputMessage('');
     }
     
     return (
         <>
             <FormComponent title={title} submitHandler={formSubmitted} clearHandler={formCleared} models={sortedModels} />
-            <OutputView message={outputMessage} messageType={messageType} imageUrl={imgUrl} />
+            <OutputView message={outputMessage} messageType={messageType} outputType={outputType} outputUrl={outputUrl} />
         </>
     );
 }

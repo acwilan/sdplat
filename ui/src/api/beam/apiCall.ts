@@ -19,6 +19,9 @@ export const beamApiCall = (formData: FormData): Promise<string> => {
   if (formData.negativePrompt && formData.negativePrompt.trim().length > 0) {
     request.negative_prompt = formData.negativePrompt;
   }
+  if (formData.transcript && formData.transcript.trim().length > 0) {
+    request.transcript = formData.transcript;
+  }
   const beamAppId: string  = formData.model;
   const beamClient = new BeamClient({ authToken: beamAuthToken });
   return beamClient.textPrompt(beamAppId, request)

@@ -8,9 +8,11 @@ import { camelCaseToSentence } from '../stringUtils';
 
 const Home: React.FC<PathComponentProps> = ({ pathSegment }) => {
   const features = pathSegment ? [
-    { name: 'Text to image (Txt2Img)', path: `/${pathSegment}/txt2img` },
-    { name: 'Image to image (Img2Img)', path: '' },
-    { name: 'Text to video (Txt2Vid)', path: `/${pathSegment}/txt2vid` },
+    { name: 'Text to image', path: `/${pathSegment}/txt2img` },
+    { name: 'Image to image', path: '' },
+    { name: 'Text to video', path: `/${pathSegment}/txt2vid` },
+    { name: 'Text to audio', path: `/${pathSegment}/txt2aud` },
+    { name: 'Text to speech', path: `/${pathSegment}/txt2spch` },
   ] : [
     { name: 'Beam', path: '/beam' },
     { name: 'ModelsLab', path: '/modelslab' }

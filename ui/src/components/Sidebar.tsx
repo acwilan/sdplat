@@ -17,7 +17,7 @@ const Sidebar: React.FC<PathComponentProps> = ({ pathSegment }) => {
     setOpen(!open);
   };
 
-  return (
+  return (pathSegment && (
     <div className={`sidebar ${open ? 'open' : 'collapsed'}`}>
       <Button
         onClick={toggleSidebar}
@@ -33,12 +33,18 @@ const Sidebar: React.FC<PathComponentProps> = ({ pathSegment }) => {
           <Nav className="flex-column">
             <Nav.Link href={`/${pathSegment}/txt2Img`}>Text to image</Nav.Link>
             <Nav.Link as={NavbarText}>Image to image</Nav.Link>
+            {pathSegment === 'beam' && (
+              <>
             <Nav.Link href={`/${pathSegment}/txt2vid`}>Text to video</Nav.Link>
+            <Nav.Link href={`/${pathSegment}/txt2aud`}>Text to audio</Nav.Link>
+            <Nav.Link href={`/${pathSegment}/txt2spch`}>Text to speech</Nav.Link>
+              </>
+            )}
           </Nav>
         </div>
       </Collapse>
     </div>
-  );
+  )) || (<div></div>);
 };
 
 export default Sidebar;
