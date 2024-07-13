@@ -10,8 +10,6 @@ jest.mock('../../src/hooks/use-last-segment');
 
 // Cast useLastSegment to a jest.Mock
 const mockedUseLastSegment = useLastSegment as jest.Mock;
-
-// Set the return value of the mock
 mockedUseLastSegment.mockReturnValue('txt2img');
 
 jest.mock('../../src/components/FormComponent', () => ({
@@ -108,6 +106,7 @@ describe('TextInputView Component', () => {
     });
 
     test('handles form clearing', () => {
+        mockedUseLastSegment.mockReturnValue('txt2aud');
         render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const clearHandler = (FormComponent as jest.Mock).mock.calls[0][0].clearHandler as () => void;

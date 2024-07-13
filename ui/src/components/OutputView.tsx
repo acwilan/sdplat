@@ -39,7 +39,7 @@ const OutputView: React.FC<OutputViewProps> = ({ message, messageType, outputTyp
         </div>
       )}
       {outputType == OutputType.AUDIO && outputUrl && (
-        <audio controls>
+        <audio controls data-testid="audio-element">
           <source src={outputUrl} type="audio/wav" />
           Your browser does not support the audio element.
         </audio>

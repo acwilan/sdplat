@@ -11,10 +11,11 @@ describe('OutputView Component', () => {
     expect(alertElement).toHaveClass('alert-success');
   });
 
-  test('renders the image with correct src attribute', () => {
-    render(<OutputView outputType={OutputType.IMAGE} outputUrl="https://example.com/test.jpg" />);
-    const imageElement = screen.getByRole('img');
-    expect(imageElement).toHaveAttribute('src', 'https://example.com/test.jpg');
+  test('renders the image with correct src attribute', async () => {
+    render(<OutputView outputType={OutputType.AUDIO} outputUrl="https://example.com/test.wav" />);
+    const audioElement = await screen.findByTestId('audio-element');
+    const sourceElement = audioElement.querySelector('source');
+    expect(sourceElement).toHaveAttribute('src', 'https://example.com/test.wav');
   });
 
   test('toggles image size on click', () => {
