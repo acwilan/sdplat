@@ -4,6 +4,15 @@ import '@testing-library/jest-dom';
 import TextInputView from '../../src/components/TextInputView';
 import { FormComponent, FormData } from '../../src/components/FormComponent';
 import { config } from '../../../conf/sdConfig';
+import useLastSegment from '../../src/hooks/use-last-segment';
+
+jest.mock('../../src/hooks/use-last-segment');
+
+// Cast useLastSegment to a jest.Mock
+const mockedUseLastSegment = useLastSegment as jest.Mock;
+
+// Set the return value of the mock
+mockedUseLastSegment.mockReturnValue('txt2img');
 
 jest.mock('../../src/components/FormComponent', () => ({
     FormComponent: jest.fn(() => null),
@@ -61,7 +70,7 @@ describe('TextInputView Component', () => {
         }), {});
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'test prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '', transcript: '' };
 
         // Log to ensure the submitHandler is called
         // console.log('Calling submitHandler with formData:', formData);
@@ -72,7 +81,7 @@ describe('TextInputView Component', () => {
         expect(apiCall).toHaveBeenCalledWith(formData);
 
         await waitFor(() => {
-            expect(screen.getByText("Here's your image")).toBeInTheDocument();
+            expect(screen.getByText("Here's your result")).toBeInTheDocument();
             expect(screen.getByRole('img')).toHaveAttribute('src', 'https://example.com/image.jpg');
         });
     });
@@ -81,7 +90,7 @@ describe('TextInputView Component', () => {
         render(<TextInputView title='' modelTarget='txt2img' apiCall={apiCall} models={models} />);
 
         const submitHandler = (FormComponent as jest.Mock).mock.calls[0][0].submitHandler as (formData: FormData) => Promise<void>;
-        const formData: FormData = { prompt: 'error prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '' };
+        const formData: FormData = { prompt: 'error prompt', model: Object.keys(models)[0], height: '', width: '', negativePrompt: '', transcript: '' };
 
         // Log to ensure the submitHandler is called
         // console.log('Calling submitHandler with formData:', formData);

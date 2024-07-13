@@ -1,7 +1,7 @@
 // src/components/FormComponent.tsx
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
-import { useLocation } from 'react-router-dom';
+import useLastSegment from '../hooks/use-last-segment';
 
 export type ModelInfo = {
   id: string;
@@ -45,9 +45,7 @@ export const FormComponent: React.FC<FormComponentProps> = ({ submitHandler, mod
   const [isFormValid, setIsFormValid] = useState(false);
   const [isFormBlocked, setIsFormBlocked] = useState(false);
 
-  const path = useLocation().pathname;
-  // get latest segment from path
-  const lastSegment = path.split('/').pop();
+  const lastSegment = useLastSegment();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

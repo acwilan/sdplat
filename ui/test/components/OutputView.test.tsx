@@ -1,24 +1,24 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import OutputView from '../../src/components/OutputView'; 
+import OutputView, { OutputType } from '../../src/components/OutputView'; 
 
 describe('OutputView Component', () => {
   test('renders the message with correct variant', () => {
-    render(<OutputView message="Test message" messageType="success" />);
+    render(<OutputView message="Test message" outputType={OutputType.IMAGE} messageType="success" />);
     const alertElement = screen.getByRole('alert');
     expect(alertElement).toHaveTextContent('Test message');
     expect(alertElement).toHaveClass('alert-success');
   });
 
   test('renders the image with correct src attribute', () => {
-    render(<OutputView imageUrl="https://example.com/test.jpg" />);
+    render(<OutputView outputType={OutputType.IMAGE} outputUrl="https://example.com/test.jpg" />);
     const imageElement = screen.getByRole('img');
     expect(imageElement).toHaveAttribute('src', 'https://example.com/test.jpg');
   });
 
   test('toggles image size on click', () => {
-    render(<OutputView imageUrl="https://example.com/test.jpg" />);
+    render(<OutputView outputType={OutputType.IMAGE} outputUrl="https://example.com/test.jpg" />);
     const imageElement = screen.getByRole('img');
     const containerDiv = imageElement.closest('.image-container');
     
@@ -39,13 +39,13 @@ describe('OutputView Component', () => {
   });
 
   test('does not render Alert if message is not provided', () => {
-    render(<OutputView />);
+    render(<OutputView outputType={OutputType.IMAGE} />);
     const alertElement = screen.queryByRole('alert');
     expect(alertElement).not.toBeInTheDocument();
   });
 
   test('does not render Image if imageUrl is not provided', () => {
-    render(<OutputView />);
+    render(<OutputView outputType={OutputType.IMAGE} />);
     const imageElement = screen.queryByRole('img');
     expect(imageElement).not.toBeInTheDocument();
   });

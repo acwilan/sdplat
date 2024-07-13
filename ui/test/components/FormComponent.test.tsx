@@ -3,6 +3,16 @@ import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react';
 import { FormComponent, FormData } from '../../src/components/FormComponent';
 import { mockModels } from '../mocks/models';
+import useLastSegment from '../../src/hooks/use-last-segment';
+
+jest.mock('../../src/hooks/use-last-segment');
+
+// Cast useLastSegment to a jest.Mock
+const mockedUseLastSegment = useLastSegment as jest.Mock;
+
+// Set the return value of the mock
+mockedUseLastSegment.mockReturnValue('txt2img');
+
 
 const promiseHandler: (formData: FormData) => Promise<any> = (formData: FormData) => {
   return new Promise<any>((resolve, reject) => {
@@ -64,6 +74,7 @@ describe('FormComponent', () => {
       height: '100',
       width: '200',
       negativePrompt: 'Test Negative Prompt',
+      transcript: "",
     });
   });
 });
