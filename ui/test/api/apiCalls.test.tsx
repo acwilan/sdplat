@@ -32,7 +32,7 @@ describe('beamApiCall', () => {
       width: '256',
       negativePrompt: 'Negative prompt',
       model: 'testModel',
-      transcript: '',
+      transcript: 'testTranscript',
     };
 
     const result = await beamApiCall(formData);
@@ -48,7 +48,7 @@ describe('beamApiCall', () => {
       width: '',
       negativePrompt: '',
       model: 'testModel',
-      transcript: '',
+      transcript: 'testTranscript',
     };
 
     const result = await beamApiCall(formData);
