@@ -1,6 +1,6 @@
 {
   "name": "sdplat",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Stable Diffusion Platform",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   },
   "engines": {
     "node": "18.x",
-    "yarn": "1.22.22"
+    "yarn": "1.22.x"
   },
   "repository": {
     "type": "git",

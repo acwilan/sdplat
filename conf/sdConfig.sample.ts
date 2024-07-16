@@ -1,22 +1,22 @@
 export const config = {
-    models: [
-        {
-            id: "1",
-            name: "Stable Diffusion 1.5",
-            beamId: 'beamApp1Id'
-        },
-        {
-            id: "2",
-            name: "Stable Diffusion 2.0",
-            beamId: 'beamApp2Id'
-        },
-        {
-            id: "3",
-            name: "Stable Diffusion XL",
-            beamId: 'beamApp3Id'
-        }
-    ],
     beam: {
+        models: {
+            "model1": {
+                name: "Model 1",
+                targets: ['txt2img']
+            },
+            "model2": {
+                name: "Model 2",
+                targets: ['txt2img']
+            },
+            "model3": {
+                name: "Model 3",
+                targets: ['txt2img']
+            }
+        },
         authToken: 'beamAuthToken'
+    },
+    modelsLab: {
+        apiKey: 'modelsLabAuthToken'
     }
 };

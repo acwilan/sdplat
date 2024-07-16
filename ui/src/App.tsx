@@ -1,16 +1,22 @@
 import React from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route, useLocation } from 'react-router-dom';
 import { Navbar, Container } from 'react-bootstrap';
 import Navigation from './components/Navigation';
 import Sidebar from './components/Sidebar';
 import './App.css';
 import Home from './components/Home';
-import Txt2Img from './components/Txt2Img';
+import TextInputView from './components/TextInputView';
+import { config } from '../../conf/sdConfig';
+import { beamApiCall, modelsLabApiCall } from './api';
+import useFirstPathSegment from './hooks/use-first-segment';
+
+const beamModels = config.beam.models;
 
 const Img2Img = () => <h2>Image to Image (Img2Img)</h2>;
-const Txt2Vid = () => <h2>Text to Video (Txt2Vid)</h2>;
 
 const App: React.FC<{ theme: string }> = ({ theme }) => {
+  const firstPathSegment = useFirstPathSegment();
+
   return (
     <div>
       <Navbar bg={theme} variant={theme} expand="lg">
@@ -22,13 +28,20 @@ const App: React.FC<{ theme: string }> = ({ theme }) => {
       </Navbar>
       <Container fluid className="app-container">
         <div className="d-flex">
-          <Sidebar />
+          <Sidebar pathSegment={firstPathSegment} />
           <div className="content-container">
             <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/txt2img' element={<Txt2Img />} />
-              <Route path="/img2img" element={<Img2Img />} />
-              <Route path="/txt2vid" element={<Txt2Vid />} />
+              <Route path='/' element={<Home pathSegment='' />} />
+
+              <Route path='/beam' element={<Home pathSegment='beam' />} />
+              <Route path='/beam/img2img' element={<Img2Img />} />
+              <Route path='/beam/txt2img' element={<TextInputView title='Text to Image (beam)' modelTarget='txt2img' apiCall={beamApiCall} models={beamModels} />} />
+              <Route path='/beam/txt2vid' element={<TextInputView title='Text to Video (beam)' modelTarget='txt2vid' apiCall={beamApiCall} models={beamModels} />} />
+              <Route path='/beam/txt2aud' element={<TextInputView title='Text to Audio (beam)' modelTarget='txt2aud' apiCall={beamApiCall} models={beamModels} />} />
+              <Route path='/beam/txt2spch' element={<TextInputView title='Text to Speech (beam)' modelTarget='txt2spch' apiCall={beamApiCall} models={beamModels} />} />
+
+              <Route path='/modelslab' element={<Home pathSegment='modelslab' />} />
+              <Route path='/modelslab/txt2img' element={<TextInputView title='Text to Image (modelslab)' modelTarget='modelslab' apiCall={modelsLabApiCall} models={beamModels} />} />
             </Routes>
           </div>
         </div>
