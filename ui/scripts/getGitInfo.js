@@ -18,7 +18,7 @@ const getGitInfo = (command, defaultValue) => {
 const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 
     process.env.HEROKU_APP_NAME || 'feature branch');
 const commitId = getGitInfo('git rev-parse HEAD', 
-    process.env.HEROKU_SLUG_COMMIT || 'unknown');
+    process.env.SOURCE_VERSION || 'unknown');
 
 // Write the git info to a file
 fs.writeFileSync(gitInfoPath, JSON.stringify({ branch, commitId }));
