@@ -1,7 +1,22 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 
-const branch = execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
-const commitId = execSync('git rev-parse HEAD').toString().trim();
+const gitInfoPath = path.resolve(__dirname, '../gitInfo.json');
 
-fs.writeFileSync('gitInfo.json', JSON.stringify({ branch, commitId }));
+// Function to execute a git command and return the result, or default if it fails
+const getGitInfo = (command, defaultValue) => {
+  try {
+    return execSync(command).toString().trim();
+  } catch (error) {
+    console.warn(`Failed to get git info: ${command}, using default value: ${defaultValue}`);
+    return defaultValue;
+  }
+};
+
+// Get branch and commit ID or use defaults
+const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 'feature branch');
+const commitId = getGitInfo('git rev-parse HEAD', process.env.HEROKU_SLUG_COMMIT || 'unknown');
+
+// Write the git info to a file
+fs.writeFileSync(gitInfoPath, JSON.stringify({ branch, commitId }));
