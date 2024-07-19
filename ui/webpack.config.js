@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { codecovWebpackPlugin } = require("@codecov/webpack-plugin");
+const webpack = require('webpack');
+const gitInfo = require('./gitInfo.json');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -35,6 +37,10 @@ module.exports = {
       enableBundleAnalysis: process.env.CODECOV_TOKEN !== undefined,
       bundleName: "sdplat-ui-bundle",
       uploadToken: process.env.CODECOV_TOKEN,
+    }),
+    new webpack.DefinePlugin({
+      'process.env.BRANCH': JSON.stringify(gitInfo.branch),
+      'process.env.COMMIT_ID': JSON.stringify(gitInfo.commitId),
     }),
   ],
   devServer: {
