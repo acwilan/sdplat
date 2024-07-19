@@ -15,8 +15,10 @@ const getGitInfo = (command, defaultValue) => {
 };
 
 // Get branch and commit ID or use defaults
-const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 'feature branch');
-const commitId = getGitInfo('git rev-parse HEAD', process.env.HEROKU_SLUG_COMMIT || 'unknown');
+const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 
+    process.env.HEROKU_APP_NAME || 'feature branch');
+const commitId = getGitInfo('git rev-parse HEAD', 
+    process.env.HEROKU_SLUG_COMMIT || 'unknown');
 
 // Write the git info to a file
 fs.writeFileSync(gitInfoPath, JSON.stringify({ branch, commitId }));
