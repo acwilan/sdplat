@@ -9,6 +9,7 @@ import TextInputView from './components/TextInputView';
 import { config } from '../../conf/sdConfig';
 import { beamApiCall, modelsLabApiCall } from './api';
 import useFirstPathSegment from './hooks/use-first-segment';
+import Footer from './components/Footer';
 
 const beamModels = config.beam.models;
 
@@ -45,6 +46,7 @@ const App: React.FC<{ theme: string }> = ({ theme }) => {
             </Routes>
           </div>
         </div>
+        <Footer />
       </Container>
     </div>
   );
