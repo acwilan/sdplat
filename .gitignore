@@ -143,3 +143,5 @@ api/beam/txt2img/*
 api/beam/txt2vid/*
 !api/beam/txt2vid/common.py
 !api/beam/txt2vid/animatediff*.py
+
+gitInfo.json

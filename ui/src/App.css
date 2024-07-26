@@ -27,3 +27,13 @@
     padding: 20px;
     transition: margin-left 0.3s;
 }
+
+/* Add this to your main CSS file or in a CSS module */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f8f9fa; /* same as bg-light class */
+    padding: 10px 0; /* adjust as needed */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* optional, for a shadow effect */
+}

@@ -1,10 +1,11 @@
 {
   "name": "sdplat-ui",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "webpack serve --mode development",
+    "prebuild": "node ./scripts/getGitInfo.js",
     "build": "webpack --mode production",
     "heroku-prebuild": "../.github/workflows/scripts/generateConfigFile.sh ../conf/sdConfig.ts",
     "test": "jest"
@@ -43,10 +44,12 @@
     "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.12",
     "babel-jest": "^29.7.0",
+    "fs": "^0.0.1-security",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-fetch-mock": "^3.0.3",
+    "path": "^0.12.7",
     "react-test-renderer": "^18.3.1",
     "ts-jest": "^29.1.4"
   },

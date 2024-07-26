@@ -1,3 +1,14 @@
+# [1.2.0](https://github.com/acwilan/sdplat/compare/v1.1.0...v1.2.0) (2024-07-26)
+
+
+### Features
+
+* Add version and build date to footer ([#52](https://github.com/acwilan/sdplat/issues/52)) ([4dd328e](https://github.com/acwilan/sdplat/commit/4dd328e98e3423d110d876b35663466c96c3ed02))
+* Display a footer with GIT information ([#48](https://github.com/acwilan/sdplat/issues/48)) ([887834b](https://github.com/acwilan/sdplat/commit/887834bf7e47c205e68f1846c595834f08a90191))
+
+
+
+## Previous Releases
 # [1.1.0](https://github.com/acwilan/sdplat/compare/v1.0.0...v1.1.0) (2024-07-16)
 
 
