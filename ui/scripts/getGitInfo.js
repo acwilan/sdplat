@@ -16,8 +16,10 @@ const getGitInfo = (command, defaultValue) => {
 };
 
 // Get branch and commit ID or use defaults
-const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 'unknown');
-const commitId = getGitInfo('git rev-parse HEAD', 'unknown');
+const branch = getGitInfo('git rev-parse --abbrev-ref HEAD', 
+  process.env.HEROKU_APP_NAME || 'feature branch');
+const commitId = getGitInfo('git rev-parse HEAD', 
+  process.env.SOURCE_VERSION || 'unknown');
 
 // Read version from package.json
 const packageJsonPath = path.resolve(__dirname, '../package.json');
