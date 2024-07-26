@@ -41,6 +41,8 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.BRANCH': JSON.stringify(gitInfo.branch),
       'process.env.COMMIT_ID': JSON.stringify(gitInfo.commitId),
+      'process.env.VERSION': JSON.stringify(gitInfo.version),
+      'process.env.BUILD_DATE': JSON.stringify(gitInfo.buildDate),
     }),
   ],
   devServer: {
